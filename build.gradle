@@ -133,7 +133,7 @@ subprojects { project ->
 
 	task copyDocs(type:Copy, dependsOn:asciidoctor) {
 		from "${project.buildDir}/asciidoc/html5"
-		into "${project.rootProject.buildDir}/docs/${project.name}"
+		into "${project.rootProject.buildDir}/docs/${project.name}/manual"
 	}
 
 	if(apiDocProjects) {
@@ -161,7 +161,11 @@ task clean(type:Delete) {
 	delete project.buildDir
 }
 task copyDocs(dependsOn:subprojects*.tasks*.copyDocs)
-task docs(dependsOn:[groovydoc, copyDocs] +
+task copyResources(type:Copy) {
+	from 'src/docs/resources'
+	into 'build/docs'
+}
+task docs(dependsOn:[groovydoc, copyDocs, copyResources] +
 	subprojects.findAll { project -> project.tasks.findByName('groovydoc')}
 			   .collect { project -> project.tasks.groovydoc }
 )
