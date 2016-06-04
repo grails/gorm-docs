@@ -1,0 +1,30 @@
+
+===== CassandraTemplate
+
+
+
+===== Purpose
+
+
+A Spring bean that provides access to the lower level CassandraTemplate API 
+
+
+===== Examples
+
+
+[source,groovy]
+----
+def cassandraTemplate
+
+def myAction = {
+    def person = cassandraTemplate.selectOneById(Person.class, uuid)
+    person.age = 30
+    cassandraTemplate.update(person)
+}
+----
+
+
+===== Description
+
+
+See the http://docs.spring.io/spring-data/cassandra/docs/1.0.4.RELEASE/api/org/springframework/data/cassandra/core/CassandraTemplate.html[CassandraTemplate] docs, the http://www.datastax.com/documentation/developer/java-driver/2.0/common/drivers/introduction/introArchOverview_c.html[Cassandra Java Driver] docs, and the http://www.datastax.com/drivers/java/2.0/index.html[Cassandra Java Driver API] for API usage info.

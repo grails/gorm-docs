@@ -1,0 +1,60 @@
+= GORM Developer Guide
+Graeme Rocher:version: 6.0.0.BUILD-SNAPSHOT
+:imagesdir: ./images
+:source-highlighter: coderay
+
+[[introduction]]
+== Introduction
+
+include::introduction.adoc[]
+
+[[gettingStarted]]
+== Getting Started
+
+include::gettingStarted.adoc[]
+
+[[understandingApi]]
+== Understanding the GORM API
+
+include::understandingApi.adoc[]
+
+[[datastoreBasics]]
+=== Datastore Basics
+
+include::understandingApi/datastoreBasics.adoc[]
+
+[[implementingCrud]]
+=== Implementing CRUD
+
+include::understandingApi/implementingCrud.adoc[]
+
+[[secondaryIndexes]]
+=== Secondary Indexing
+
+include::understandingApi/secondaryIndexes.adoc[]
+
+[[implementingQueries]]
+=== Implementing Querying
+
+include::understandingApi/implementingQueries.adoc[]
+
+[[gormEnhancer]]
+=== GORM Enhancer
+
+include::understandingApi/gormEnhancer.adoc[]
+
+[[gormApis]]
+=== Adding to GORM APIs
+
+include::understandingApi/gormApis.adoc[]
+
+[[testing]]
+== Using the Test Compatibility Kit
+
+include::testing.adoc[]
+
+[[stepByStep]]
+== Step by Step Guide to Creating and Implementation
+
+include::stepByStep.adoc[]
+

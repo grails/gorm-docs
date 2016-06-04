@@ -1,0 +1,40 @@
+= GORM for Hibernate
+Graeme Rocher:version: 6.0.0.BUILD-SNAPSHOT
+:imagesdir: ./images
+:source-highlighter: coderay
+
+[[introduction]]
+== Introduction
+
+include::introduction.adoc[]
+
+[[upgradeNotes]]
+=== Upgrade Notes
+
+include::introduction/upgradeNotes.adoc[]
+
+[[gettingStarted]]
+== Getting Started
+
+include::gettingStarted.adoc[]
+
+[[hibernateVersions]]
+=== Configuring Different Hibernate Versions
+
+include::gettingStarted/hibernateVersions.adoc[]
+
+[[springBoot]]
+=== Using GORM in Spring Boot
+
+include::gettingStarted/springBoot.adoc[]
+
+[[outsideGrails]]
+=== Using GORM for Hibernate Outside Grails
+
+include::gettingStarted/outsideGrails.adoc[]
+
+[[learningMore]]
+== Learning More
+
+include::learningMore.adoc[]
+

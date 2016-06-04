@@ -1,0 +1,144 @@
+= GORM for Cassandra
+Paras Lakhani:version: 6.0.0.BUILD-SNAPSHOT
+:imagesdir: ./images
+:source-highlighter: coderay
+
+[[introduction]]
+== Introduction
+
+include::introduction.adoc[]
+
+[[compatibility]]
+=== Compatibility with GORM for Hibernate
+
+include::introduction/compatibility.adoc[]
+
+[[gettingStarted]]
+== Getting Started
+
+include::gettingStarted.adoc[]
+
+[[standalone]]
+=== Using GORM for Cassandra Standalone
+
+include::gettingStarted/standalone.adoc[]
+
+[[combiningCassandraAndHibernate]]
+=== Combining Cassandra and Hibernate
+
+include::gettingStarted/combiningCassandraAndHibernate.adoc[]
+
+[[advancedConfig]]
+=== Advanced Configuration
+
+include::gettingStarted/advancedConfig.adoc[]
+
+[[springBoot]]
+=== Using GORM in Spring Boot
+
+include::gettingStarted/springBoot.adoc[]
+
+[[outsideGrails]]
+=== GORM for Cassandra outside Grails
+
+include::gettingStarted/outsideGrails.adoc[]
+
+[[mapping]]
+== Mapping to Cassandra Tables
+
+include::mapping.adoc[]
+
+[[idGeneration]]
+=== Identity Generation
+
+include::mapping/idGeneration.adoc[]
+
+[[compoundPrimaryKeys]]
+=== Compount Primary Keys
+
+include::mapping/compoundPrimaryKeys.adoc[]
+
+[[queryIndexes]]
+=== Query Indexes
+
+include::mapping/queryIndexes.adoc[]
+
+[[tableProperties]]
+=== Table Properties
+
+include::mapping/tableProperties.adoc[]
+
+[[stateless]]
+=== Stateless Mode
+
+include::mapping/stateless.adoc[]
+
+[[options]]
+== Querying and Persistence Options
+
+include::options.adoc[]
+
+[[queryingOptions]]
+=== Querying Options
+
+include::options/queryingOptions.adoc[]
+
+[[lowLevelApi]]
+== Cassandra Low-level API
+
+include::lowLevelApi.adoc[]
+
+[[reference]]
+== Reference
+
+[[ref-beans]]
+=== Beans
+
+[[ref-beans-cassandraTemplate]]
+==== cassandraTemplate
+
+include::ref/Beans/cassandraTemplate.adoc[]
+
+[[ref-domain-classes]]
+=== Domain Classes
+
+[[ref-domain-classes-appendTo]]
+==== appendTo
+
+include::ref/Domain Classes/appendTo.adoc[]
+
+[[ref-domain-classes-deleteAtFrom]]
+==== deleteAtFrom
+
+include::ref/Domain Classes/deleteAtFrom.adoc[]
+
+[[ref-domain-classes-deleteFrom]]
+==== deleteFrom
+
+include::ref/Domain Classes/deleteFrom.adoc[]
+
+[[ref-domain-classes-prependTo]]
+==== prependTo
+
+include::ref/Domain Classes/prependTo.adoc[]
+
+[[ref-domain-classes-replaceAtIn]]
+==== replaceAtIn
+
+include::ref/Domain Classes/replaceAtIn.adoc[]
+
+[[ref-domain-classes-updateProperties]]
+==== updateProperties
+
+include::ref/Domain Classes/updateProperties.adoc[]
+
+[[ref-domain-classes-updateProperty]]
+==== updateProperty
+
+include::ref/Domain Classes/updateProperty.adoc[]
+
+[[ref-domain-classes-updateSingleTypes]]
+==== updateSingleTypes
+
+include::ref/Domain Classes/updateSingleTypes.adoc[]
+

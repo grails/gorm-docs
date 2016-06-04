@@ -1,0 +1,28 @@
+If you plan to use Cassandra as your primary datastore then you need to remove the Hibernate plugin from your `build.gradle` file.
+
+[source,groovy]
+----
+compile 'org.grails.plugins:hibernate'
+----
+
+With this done all domain classes in grails-app/domain will be persisted via Cassandra and not Hibernate. You can create a domain class by running the regular `create-domain-class` command:
+
+[source,groovy]
+----
+grails create-domain-class Person
+----
+
+The `Person` domain class will automatically be a persistent entity that can be stored in Cassandra. Example:
+
+[source,groovy]
+----
+class Person {    
+    String firstName
+    String lastName 
+}
+def person = new Person(firstName: "Fred", lastName: "Flintstone")
+
+person.save()
+...
+def person2 = Person.get(uuid)
+----
