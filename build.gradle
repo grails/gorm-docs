@@ -20,6 +20,15 @@ ext {
 		'gorm',
 		'gorm-plugin-support'
 	]
+
+	implementationProjects = [
+		mongodb: coreProjects + ['gorm-mongodb', 'gorm-mongodb-ext'],
+		hibernate: coreProjects + ['gorm-hibernate-core', 'gorm-hibernate5'],
+		neo4j: coreProjects + ['gorm-neo4j'],
+		rx: coreProjects + ['gorm-rx', 'gorm-rx-plugin-support'],
+		cassandra: coreProjects + ['gorm-cassandra'],
+		redis: coreProjects + ['gorm-redis']
+	]
 }
 
 version project.gormVersion
@@ -67,7 +76,7 @@ fetchSource.outputs.dir checkOutDir
 
 task groovydoc(type:Groovydoc, dependsOn:fetchSource) {
 	docTitle = "GORM $gormVersion"
-	destinationDir = project.file("build/api")
+	destinationDir = project.file("build/docs/api")
 
 	def files 
 	for(p in coreProjects) {
@@ -85,6 +94,29 @@ task groovydoc(type:Groovydoc, dependsOn:fetchSource) {
 
 subprojects { project ->
 	apply plugin: 'org.asciidoctor.convert'
+
+	repositories {
+		maven {
+			url "https://repo.grails.org/grails/core"
+		}
+	}
+
+	configurations {
+		groovy
+		documentation
+	}
+
+	def apiDocProjects = implementationProjects.get(project.name)
+	dependencies {
+		groovy "org.codehaus.groovy:groovy-all:2.4.6"
+		documentation 'org.fusesource.jansi:jansi:1.12'
+		if(apiDocProjects) {
+			for(p in apiDocProjects) {
+				documentation "org.grails:grails-datastore-$p:$gormVersion"	
+			}			
+		}		
+	}	
+
 	asciidoctor {
 	    resources {
 	        from("${project.projectDir}/src/docs/images")
@@ -98,4 +130,26 @@ subprojects { project ->
 	               'version'       : project.version,
 	               'sourcedir'     : "${project.projectDir}/src/main/groovy"
 	}	
+
+	
+
+	if(apiDocProjects) {
+		task groovydoc(type:Groovydoc, dependsOn:fetchSource) {
+			docTitle = "GORM for ${project.name[0].toUpperCase()}${project.name.substring(1)} $gormVersion"
+			destinationDir = project.rootProject.file("build/docs/${project.name}/api")
+
+			def files 
+			for(p in apiDocProjects) {
+				if(files == null) {
+					files = project.rootProject.files("${checkOutDir}/gorm-src/grails-datastore-${p}/src/main/groovy")
+				}
+				else {
+					files += project.rootProject.files("${checkOutDir}/gorm-src/grails-datastore-${p}/src/main/groovy")	
+				}
+			}
+			source = files
+			classpath = configurations.documentation
+			groovyClasspath = configurations.groovy
+		}		
+	}
 }
