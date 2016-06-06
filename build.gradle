@@ -84,7 +84,8 @@ fetchSource.outputs.dir checkOutDir
 task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 	docTitle = "GORM $gormVersion"
 	destinationDir = project.file("build/docs/api")
-
+	notimestamp = true
+	noversionstamp = true
 	def files 
 	for(p in coreProjects) {
 		if(files == null) {
@@ -97,6 +98,7 @@ task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 	source = files
 	classpath = configurations.documentation
 	groovyClasspath = configurations.groovy
+	jvmArgs "-Xmx1024m"
 }
 
 subprojects { project ->
@@ -147,6 +149,8 @@ subprojects { project ->
 		task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 			docTitle = "GORM for ${project.name[0].toUpperCase()}${project.name.substring(1)} $gormVersion"
 			destinationDir = project.rootProject.file("build/docs/${project.name}/api")
+			notimestamp = true
+			noversionstamp = true
 
 			def files 
 			for(p in apiDocProjects) {
@@ -160,6 +164,7 @@ subprojects { project ->
 			source = files
 			classpath = configurations.documentation
 			groovyClasspath = configurations.groovy
+			jvmArgs "-Xmx1024m"
 		}		
 	}
 }
