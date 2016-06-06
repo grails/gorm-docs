@@ -50,7 +50,7 @@ configurations {
 }
 
 dependencies {
-	groovy "org.codehaus.groovy:groovy-all:2.4.6"
+	documentation "org.codehaus.groovy:groovy-all:2.4.6"
 	documentation 'org.fusesource.jansi:jansi:1.12'
 	for(p in coreProjects) {
 		documentation "org.grails:grails-datastore-$p:$gormVersion"	
@@ -97,7 +97,6 @@ task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 	}
 	source = files
 	classpath = configurations.documentation
-	groovyClasspath = configurations.groovy
 	jvmArgs "-Xmx1024m"
 }
 
@@ -117,7 +116,7 @@ subprojects { project ->
 
 	def apiDocProjects = implementationProjects.get(project.name)
 	dependencies {
-		groovy "org.codehaus.groovy:groovy-all:2.4.6"
+		documentation "org.codehaus.groovy:groovy-all:2.4.6"
 		documentation 'org.fusesource.jansi:jansi:1.12'
 		if(apiDocProjects) {
 			for(p in apiDocProjects) {
@@ -163,7 +162,6 @@ subprojects { project ->
 			}
 			source = files
 			classpath = configurations.documentation
-			groovyClasspath = configurations.groovy
 			jvmArgs "-Xmx1024m"
 		}		
 	}
