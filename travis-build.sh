@@ -21,13 +21,8 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
     git clone https://${GH_TOKEN}@github.com/grails/grails-data-mapping.git -b gh-pages gh-pages --single-branch > /dev/null
     cd gh-pages
 
-    # If this is the master branch then update the snapshot
-    if [[ $TRAVIS_BRANCH == 'master' ]]; then
-        mkdir -p snapshot
-        cp -r ../build/docs/. ./snapshot/
-
-        git add snapshot/*    
-    else 
+    
+    if [[ -n $TRAVIS_TAG ]]; then
         version="$TRAVIS_TAG"
         version=${version:1}
 
@@ -44,7 +39,14 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
 
         mkdir -p "$majorVersion"
         cp -r ../build/docs/. "./$majorVersion/"
-        git add "$majorVersion/*"
+        git add "$majorVersion/*"        
+
+    else 
+        # If this is the master branch then update the snapshot
+        # mkdir -p snapshot
+        # cp -r ../build/docs/. ./snapshot/
+
+        # git add snapshot/*    
     fi
 
 
