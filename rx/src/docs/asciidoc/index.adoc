@@ -1,0 +1,21 @@
+= RxGORM - GORM for RxJava
+:author: Graeme Rocher
+:email: graeme.rocher@gmail.com
+:source-highlighter: coderay
+:numbered:
+
+== Introduction
+
+include::introduction.adoc[]
+
+== Configuration
+
+include::configuration/config.adoc[]
+
+== Querying
+
+include::querying/index.adoc[]
+
+== Associations and Lazy Loading
+
+include::associations/index.adoc[]

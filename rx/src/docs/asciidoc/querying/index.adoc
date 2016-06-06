@@ -1,0 +1,21 @@
+RxGORM supports all the typical ways of querying that you are used to with GORM including:
+
+* http://docs.grails.org/latest/guide/GORM.html#finders[Dynamic finders]
+* http://docs.grails.org/latest/guide/GORM.html#whereQueries[Where queries]
+* http://docs.grails.org/latest/guide/GORM.html#detachedCriteria[Detached Criteria]
+* http://docs.grails.org/latest/guide/GORM.html#criteria[Criteria queries]
+
+The major difference is that all query operations return an `Observable`. In this section we will go through the various ways you can query for GORM objects.
+
+
+=== Basic Querying
+
+include::basicQuerying.adoc[]
+
+=== Where Queries
+
+include::whereQueries.adoc[]
+
+=== Dynamic Finders
+
+include::dynamicFinders.adoc[]

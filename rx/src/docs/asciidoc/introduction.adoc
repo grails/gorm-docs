@@ -1,0 +1,23 @@
+http://gorm.grails.org[GORM], the object mapping technology built into the Grails framework, has traditionally been a primarily blocking API.
+
+Async features were added in GORM 4, however these are merely a way to isolate your blocking operations onto a different thread and not a truly non-blocking implementation.
+
+RxGORM builds ontop of http://reactivex.io[RxJava] and provides a completely non-blocking, stateless implementation of GORM.
+
+Currently only MongoDB is supported as a backing store, however implementations are planned for SQL, REST client and other NoSQL datastores in the future (subject to driver support)
+
+NOTE: RxGORM is still at the milestone phase and this document is still evolving and subject to change!
+
+== Getting Started
+
+=== Installation
+
+include::gettingStarted/firstSteps.adoc[]
+
+=== Creating Domain Classes
+
+include::gettingStarted/creatingDomainClasses.adoc[]
+
+=== Performing CRUD Operations
+
+include::gettingStarted/CRUD.adoc[]
