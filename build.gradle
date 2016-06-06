@@ -1,12 +1,18 @@
 buildscript {
     repositories {
+		maven {
+			url "https://repo.grails.org/grails/core"
+		}
         jcenter()
     }
 
     dependencies {
+    	classpath 'io.github.groovylang.groovydoc:groovydoc-gradle-plugin:1.0.0'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
     }
 }
+
+import org.groovy.lang.groovydoc.tasks.GroovydocTask
 
 ext {
 	githubBranch = "master"
@@ -45,6 +51,7 @@ configurations {
 
 dependencies {
 	groovy "org.codehaus.groovy:groovy-all:2.4.6"
+	documentation 'org.fusesource.jansi:jansi:1.12'
 	for(p in coreProjects) {
 		documentation "org.grails:grails-datastore-$p:$gormVersion"	
 	}
@@ -74,7 +81,7 @@ task fetchSource << {
 fetchSource.inputs.properties(branch:githubBranch)
 fetchSource.outputs.dir checkOutDir
 
-task groovydoc(type:Groovydoc, dependsOn:fetchSource) {
+task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 	docTitle = "GORM $gormVersion"
 	destinationDir = project.file("build/docs/api")
 
@@ -137,7 +144,7 @@ subprojects { project ->
 	}
 
 	if(apiDocProjects) {
-		task groovydoc(type:Groovydoc, dependsOn:fetchSource) {
+		task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 			docTitle = "GORM for ${project.name[0].toUpperCase()}${project.name.substring(1)} $gormVersion"
 			destinationDir = project.rootProject.file("build/docs/${project.name}/api")
 
