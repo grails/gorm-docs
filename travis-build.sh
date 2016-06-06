@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
-./gradlew assemble
+
+./gradlew asciidoctor --no-daemon
+./gradlew --stop
+./gradlew groovydoc --no-daemon
+./gradlew --stop
+./gradlew docs --no-daemon
+./gradlew assemble --no-daemon
 
 EXIT_STATUS=0
 echo "Publishing archives for branch $TRAVIS_BRANCH"
