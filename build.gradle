@@ -170,9 +170,15 @@ task clean(type:Delete) {
 task copyDocs(dependsOn:subprojects*.tasks*.copyDocs)
 task copyResources(type:Copy) {
 	from 'src/docs/resources'
-	into 'build/docs'
+	into "${project.buildDir}/docs"
 }
 task docs(dependsOn:[groovydoc, copyDocs, copyResources] +
 	subprojects.findAll { project -> project.tasks.findByName('groovydoc')}
 			   .collect { project -> project.tasks.groovydoc }
 )
+
+task assemble(type: Zip, dependsOn:docs) {
+	from "${project.buildDir}/docs"
+	baseName = "${project.name}-${project.version}"
+	destinationDir = project.file("${project.buildDir}/distributions")
+}
