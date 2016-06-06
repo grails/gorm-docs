@@ -41,7 +41,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
         cp -r ../build/docs/. "./$majorVersion/"
         git add "$majorVersion/*"        
 
-    else 
+    # else 
         # If this is the master branch then update the snapshot
         # mkdir -p snapshot
         # cp -r ../build/docs/. ./snapshot/
