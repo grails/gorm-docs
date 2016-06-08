@@ -1,4 +1,4 @@
-Neo4j Grails contains some enhancements to the Neo4j Bolt Driver API.
+GORM for Neo4j contains some enhancements to the Neo4j Bolt Driver API.
 
 
 ==== Getting Properties from Nodes

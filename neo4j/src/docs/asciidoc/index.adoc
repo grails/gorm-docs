@@ -103,7 +103,7 @@ include::querying/cypher.adoc[]
 include::querying/indexing.adoc[]
 
 [[neo4jEnhancements]]
-== Enhancements to Neo4j core API
+== Enhancements to Neo4j Java Driver API
 
 include::neo4jEnhancements.adoc[]
 
