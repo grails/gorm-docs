@@ -15,14 +15,27 @@ include::introduction.adoc[]
 include::introduction/compatibility.adoc[]
 
 [[releaseNotes]]
-=== Release Notes
+=== Release History
 
 include::introduction/releaseNotes.adoc[]
+
+
+[[upgrading]]
+=== Upgrading from previous versions
+
+include::introduction/upgrading.adoc[]
 
 [[gettingStarted]]
 == Getting Started
 
+
 include::gettingStarted.adoc[]
+
+[[configurationOptions]]
+=== Neo4j Bolt Driver Configuration Options
+
+include::gettingStarted/configurationOptions.adoc[]
+
 
 [[usingNeo4jStandalone]]
 === Using Neo4j Standalone
@@ -33,11 +46,6 @@ include::gettingStarted/usingNeo4jStandalone.adoc[]
 === Combining Neo4j And Hibernate
 
 include::gettingStarted/combiningNeo4jAndHibernate.adoc[]
-
-[[advancedConfiguration]]
-=== Advanced Configuration
-
-include::gettingStarted/advancedConfiguration.adoc[]
 
 [[springBoot]]
 === Using GORM in Spring Boot
@@ -50,7 +58,7 @@ include::gettingStarted/springBoot.adoc[]
 include::gettingStarted/standalone.adoc[]
 
 [[mapping]]
-== Mapping domain classes to Neo4j node space
+== Mapping Domain Classes to Neo4j Nodes
 
 include::mapping.adoc[]
 
@@ -115,16 +123,11 @@ include::ref/Additional Gorm Methods/cypher.adoc[]
 
 include::ref/Additional Gorm Methods/cypherStatic.adoc[]
 
-[[ref-additional-gorm-methods-schemaless attributes]]
-==== schemaless attributes
+
+==== Schemaless Attributes
 
 include::ref/Additional Gorm Methods/schemaless attributes.adoc[]
 
-[[ref-beans]]
-=== Beans
 
-[[ref-beans-graphDatabaseService]]
-==== graphDatabaseService
 
-include::ref/Beans/graphDatabaseService.adoc[]
 

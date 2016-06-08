@@ -101,6 +101,9 @@ task groovydoc(type:GroovydocTask, dependsOn:fetchSource) {
 }
 
 subprojects { project ->
+
+	version project.gormVersion
+	
 	apply plugin: 'org.asciidoctor.convert'
 
 	repositories {
