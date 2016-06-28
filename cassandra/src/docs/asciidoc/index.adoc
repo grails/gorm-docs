@@ -1,5 +1,5 @@
 = GORM for Cassandra
-Paras Lakhani:version: 6.0.0.BUILD-SNAPSHOT
+Paras Lakhani
 :imagesdir: ./images
 :source-highlighter: coderay
 

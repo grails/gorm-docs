@@ -51,8 +51,9 @@ configurations {
 dependencies {
 	documentation "org.codehaus.groovy:groovy-all:2.4.6"
 	documentation 'org.fusesource.jansi:jansi:1.12'
+	String v = gormVersion.endsWith("-SNAPSHOT") ? gormVersion : "${gormVersion}.RELEASE"
 	for(p in coreProjects) {
-		documentation "org.grails:grails-datastore-$p:$gormVersion"	
+		documentation "org.grails:grails-datastore-$p:$v"	
 	}
 	
 }
@@ -117,9 +118,11 @@ subprojects { project ->
 	dependencies {
 		documentation "org.codehaus.groovy:groovy-all:2.4.6"
 		documentation 'org.fusesource.jansi:jansi:1.12'
+		String v = gormVersion.endsWith("-SNAPSHOT") ? gormVersion : "${gormVersion}.RELEASE"
+
 		if(apiDocProjects) {
 			for(p in apiDocProjects) {
-				documentation "org.grails:grails-datastore-$p:$gormVersion"	
+				documentation "org.grails:grails-datastore-$p:$v"	
 			}			
 		}		
 	}	
