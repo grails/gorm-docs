@@ -28,9 +28,7 @@ ext {
 	]
 
 	implementationProjects = [
-		mongodb: coreProjects + ['gorm-mongodb', 'gorm-mongodb-ext'],
 		hibernate: coreProjects + ['gorm-hibernate-core', 'gorm-hibernate5'],
-		neo4j: coreProjects + ['gorm-neo4j'],
 		rx: coreProjects + ['gorm-rx', 'gorm-rx-plugin-support'],
 		cassandra: coreProjects + ['gorm-cassandra'],
 		redis: coreProjects + ['gorm-redis']
