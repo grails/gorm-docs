@@ -28,10 +28,7 @@ ext {
 	]
 
 	implementationProjects = [
-		hibernate: coreProjects + ['gorm-hibernate-core', 'gorm-hibernate5'],
-		rx: coreProjects + ['gorm-rx', 'gorm-rx-plugin-support'],
-		cassandra: coreProjects + ['gorm-cassandra'],
-		redis: coreProjects + ['gorm-redis']
+		rx: coreProjects + ['gorm-rx', 'gorm-rx-plugin-support']
 	]
 }
 
@@ -127,16 +124,16 @@ subprojects { project ->
 	}	
 
 	asciidoctor {
-	    resources {
-	        from("${project.projectDir}/src/docs/images")
-	        into "${project.projectDir}/images"
-	    }
+	    // resources {
+	    //     from("${project.projectDir}/src/docs/images")
+	    //     into "${project.projectDir}/images"
+	    // }
 
 	    attributes 'experimental'  : 'true',
-	               'compat-mode'   : 'true',
-	               'toc'           : 'left',
+	               // 'compat-mode'   : 'true',
 	               'icons'         : 'font',
 	               'version'       : project.version,
+	               'imagesdir':'images',
 	               'sourcedir'     : "${project.projectDir}/src/main/groovy"
 	}	
 
