@@ -1,0 +1,250 @@
+= What's new in GORM 6?
+:author: Graeme Rocher
+:email: graeme.rocher@gmail.com
+:source-highlighter: coderay
+:numbered:
+
+== Introduction
+
+GORM 6 is a major new release of the GORM toolkit. This guide will take you through the changes and new features in GORM.
+
+
+=== Spring Container-free Bootstrapping
+
+Previous versions of GORM relied on the Spring container to load and configure GORM. As of GORM 6 the Spring container is no longer required to use GORM. You can trivially load GORM using the constructor of each implementation.
+
+For example for given the following GORM entity:
+
+[source,groovy]
+----
+import grails.gorm.annotation.*
+
+@Entity
+class Person {
+    String name
+}
+----
+
+To configure Hibernate you can do:
+
+[source,groovy]
+----
+import org.grails.orm.hibernate.*
+
+HibernateDatastore datastore = new HibernateDatastore(Person)
+
+println Person.count()
+----
+
+To configure Neo4j:
+
+[source,groovy]
+----
+import org.grails.datastore.gorm.neo4j.*
+
+Neo4jDatastore datastore = new Neo4jDatastore(Person)
+
+println Person.count()
+----
+
+To configure MongoDB:
+
+[source,groovy]
+----
+import org.grails.datastore.mapping.mongo.*
+
+MongoDatastore datastore = new MongoDatastore(Person)
+
+println Person.count()
+----
+
+Configuration can be passed as a map to the first argument of the constructor.
+
+=== Improved Unit Testing
+
+Thanks to the improvements around bootstrapping and dropping of the requirement for a Spring container it is much easier to unit test GORM without requiring special framework support.
+
+For example the following Spock specification can be used to test GORM for Hibernate:
+
+[source,groovy]
+----
+import spock.lang.*
+import grails.gorm.annotation.Entity
+import grails.transaction.Rollback
+import org.grails.orm.hibernate.HibernateDatastore
+import org.springframework.transaction.PlatformTransactionManager
+
+class ExampleSpec extends Specification {
+
+    @Shared @AutoCleanup HibernateDatastore hibernateDatastore
+    @Shared PlatformTransactionManager transactionManager
+
+    void setupSpec() {
+       hibernateDatastore = new HibernateDatastore(Person)
+       transactionManager = hibernateDatastore.getTransactionManager()
+    }
+
+    @Rollback
+    void "test execute GORM standalone in a unit test"() {
+       // your logic here
+    }
+}
+----
+
+=== Unified Configuration Model
+
+In previous versions of GORM each implementation was responsible for implementing the reading of configuration separately. In GORM 6 a new unified configuration model has been introduced to reduce inconsistencies.
+
+The link:../../hibernate/api/org/grails/datastore/mapping/core/connections/ConnectionSourceSettings.html[ConnectionSourceSettings] represents common configuration across all implementations and has subclasses such as link:../../hibernate/api/org/grails/orm/hibernate/connections/HibernateConnectionSourceSettings.html[HibernateConnectionSourceSettings] for each implementation of GORM.
+
+You can obtain the materialized configuration of any implementation using the new `ConnectionSources` API (discussed in the next section). For example:
+
+[source,groovy]
+----
+HibernateDatastore datastore = .. // obtain the datastore
+HibernateConnectionSourceSettings settings =
+    datastore.connectionSources.defaultConnectionSource.settings
+----
+
+=== New ConnectionSources API
+
+The logic for setting up multiple data sources was previously hardcoded within the Hibernate plugin. This has been abstracted out into the new link:../../hibernate/api/org/grails/datastore/mapping/core/connections/ConnectionSources.html[ConnectionSources] API which operates in conjuction with the aforementioned configuration API to provide a consistent implementation across all GORM implementations.
+
+You can use the `ConnectionSources` API to iterate over the configured data sources and introspect the state the configured GORM datastore:
+
+[source,groovy]
+----
+HibernateDatastore datastore = .. // obtain the datastore
+
+for(ConnectionSource<SessionFactory, HibernateConnectionSourceSettings> connectionSource in datastore.connectionSources) {
+    String name = connectionSource.name
+    SessionFactory sessionFactory = connectionSource.source
+    // perform an operation with the session factory
+}
+----
+
+Or in Neo4j:
+
+[source,groovy]
+----
+Neo4jDatastore datastore = .. // obtain the datastore
+
+for(ConnectionSource<Driver, Neo4jConnectionSourceSettings> connectionSource in datastore.connectionSources) {
+    String name = connectionSource.name
+    Driver boltDriver = connectionSource.source
+    // perform an operation with the Bolt driver
+}
+----
+
+Or in MongoDB:
+
+[source,groovy]
+----
+MongoDatastore datastore = .. // obtain the datastore
+
+for(ConnectionSource<MongoClient, MongoConnectionSourceSettings> connectionSource in datastore.connectionSources) {
+    String name = connectionSource.name
+    MongoClient mongoClient = connectionSource.source
+    // perform an operation with MongoDB client
+}
+----
+
+=== Multiple Data Sources support in MongoDB and Neo4j
+
+GORM for Hibernate has had support multiple data sources for while now.
+
+Building on the `ConnectionSources` API multiple data sources support has been implemented in MongoDB and Neo4j. For example for MongoDB:
+
+[source,yaml]
+.grails-app/conf/application.yml
+----
+grails:
+    mongodb:
+        url: mongodb://localhost/books
+        connections:
+            moreBooks:
+                url: mongodb://localhost/moreBooks
+            evenMoreBooks:
+                url: mongodb://localhost/moreBooks
+----
+
+You can then switch to a different connection at runtime with `withConnection`:
+
+[source,groovy]
+----
+Book.withConnection("moreBooks") {
+    Book.list()
+}
+----
+
+And map domain classes to specific connections:
+
+[source,groovy]
+----
+class Book {
+    ObjectId id
+    String title
+    static mapping = {
+        connections "books", "moreBooks"
+    }
+}
+----
+
+The same feature has been implemented for GORM for Neo4j:
+
+[source,yaml]
+.grails-app/conf/application.yml
+----
+grails:
+    neo4j:
+        url: bolt://localhost:7687
+        connections:
+            moreBooks:
+                url: bolt://localhost:7688
+            evenMoreBooks:
+                url: bolt://localhost:7689
+----
+
+The syntax for mapping domain classes is the same as for MongoDB.
+
+=== Multi-Tenancy Support
+
+Support for link:../../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] has been added for GORM for Hibernate, MongoDB and Neo4j.
+
+Three different modes are supported in this release:
+
+* `DATABASE` - A separate database with a separate connection pool is used to store each tenants data (supported in GORM for Hibernate, MongoDB and Neo4j).
+* `SCHEMA` - The same database, but different schemas are used to store each tenants data (supported in GORM for MongoDB).
+* `DISCRIMINATOR` - The same database is used with a discriminator used to partition and isolate data (supported in GORM for Hibernate, MongoDB and Neo4j).
+
+For more information, see the documentation on link:../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] in the user guide.
+
+=== GORM for Neo4j 3.x Bolt Driver
+
+GORM for Neo4j has been upgraded to Neo4j 3.x and the Bolt Java driver. Bolt is a high performance binary protocol for the Neo4j graph and means that GORM for Neo4j is now better suited for applications that require Neo4j to be running in server mode (as oppose to embedded).
+
+See the link:../../neo4j/manual/index.html[GORM for Neo4j] documentation for more information about GORM and Neo4j 3.x Bolt.
+
+=== RxGORM - GORM for RxJava
+
+A new GORM API called RxGORM has been implemented that rethinks how object mapping libraries can be written for Reactive applications.
+
+RxGORM builds on the hugely popular (and pretty much industry standard), RxJava framework to provide a reactive, stateless, non-blocking implementation of GORM.
+
+The initial release of RxGORM includes two backend implementations. RxGORM for MongoDB and RxGORM for REST.
+
+=== RxGORM for MongoDB
+
+link:../../rx/manual/index.html[RxGORM for MongoDB] builds on the MongoDB Rx driver and provides a non-blocking RxGORM API for MongoDB.
+
+All of the new GORM features are also supported including multiple data sources, multi tenancy and so on.
+
+=== RxGORM for REST
+
+link:../../rx/rest-client/index.html[RxGORM for REST] builds on RxNetty and provides an advanced REST client for communicating with backend REST applications.
+
+RxGORM for REST is built on the same JSON encoding/decoding engine as GORM for MongoDB and hence is already robust and performant.
+
+In addition it has builtin understanding of common JSON formats such as HAL to automatically implemented eager fetching and common features associated with object mapping libraries.
+
+See the documentation for link:../../rx/rest-client/index.html[RxGORM for REST] for more information.
