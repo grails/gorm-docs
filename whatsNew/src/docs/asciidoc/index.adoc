@@ -1,8 +1,7 @@
-= What's new in GORM 6?
+= What's New in GORM 6?
 :author: Graeme Rocher
 :email: graeme.rocher@gmail.com
 :source-highlighter: coderay
-:numbered:
 
 == Introduction
 
@@ -13,7 +12,7 @@ GORM 6 is a major new release of the GORM toolkit. This guide will take you thro
 
 Previous versions of GORM relied on the Spring container to load and configure GORM. As of GORM 6 the Spring container is no longer required to use GORM. You can trivially load GORM using the constructor of each implementation.
 
-For example for given the following GORM entity:
+For example given the following GORM entity:
 
 [source,groovy]
 ----
@@ -25,7 +24,7 @@ class Person {
 }
 ----
 
-To configure Hibernate you can do:
+To load GORM for Hibernate you can do:
 
 [source,groovy]
 ----
@@ -36,7 +35,7 @@ HibernateDatastore datastore = new HibernateDatastore(Person)
 println Person.count()
 ----
 
-To configure Neo4j:
+To load GORM for Neo4j:
 
 [source,groovy]
 ----
@@ -47,7 +46,7 @@ Neo4jDatastore datastore = new Neo4jDatastore(Person)
 println Person.count()
 ----
 
-To configure MongoDB:
+To load GORM for MongoDB:
 
 [source,groovy]
 ----
@@ -151,7 +150,7 @@ for(ConnectionSource<MongoClient, MongoConnectionSourceSettings> connectionSourc
 
 === Multiple Data Sources support in MongoDB and Neo4j
 
-GORM for Hibernate has had support multiple data sources for while now.
+GORM for Hibernate has had support for multiple data sources for while now, however this feature was missing in other GORM implementations.
 
 Building on the `ConnectionSources` API multiple data sources support has been implemented in MongoDB and Neo4j. For example for MongoDB:
 
@@ -168,7 +167,7 @@ grails:
                 url: mongodb://localhost/moreBooks
 ----
 
-You can then switch to a different connection at runtime with `withConnection`:
+You can then switch to a different connection at runtime with the `withConnection` method:
 
 [source,groovy]
 ----
@@ -221,7 +220,7 @@ For more information, see the documentation on link:../hibernate/manual/index.ht
 
 === GORM for Neo4j 3.x Bolt Driver
 
-GORM for Neo4j has been upgraded to Neo4j 3.x and the Bolt Java driver. Bolt is a high performance binary protocol for the Neo4j graph and means that GORM for Neo4j is now better suited for applications that require Neo4j to be running in server mode (as oppose to embedded).
+GORM for Neo4j has been upgraded to Neo4j 3.x and the Bolt Java driver. Bolt is a high performance binary protocol for the Neo4j graph, which means that GORM for Neo4j is now better suited for applications that require Neo4j to be running in server mode (as opposed to embedded).
 
 See the link:../../neo4j/manual/index.html[GORM for Neo4j] documentation for more information about GORM and Neo4j 3.x Bolt.
 
@@ -231,7 +230,7 @@ A new GORM API called RxGORM has been implemented that rethinks how object mappi
 
 RxGORM builds on the hugely popular (and pretty much industry standard), RxJava framework to provide a reactive, stateless, non-blocking implementation of GORM.
 
-The initial release of RxGORM includes two backend implementations. RxGORM for MongoDB and RxGORM for REST.
+The initial release of RxGORM includes two backend implementations. RxGORM for MongoDB and RxGORM for REST, with more planned for the future.
 
 === RxGORM for MongoDB
 
