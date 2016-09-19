@@ -213,7 +213,7 @@ Support for link:../../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] h
 Three different modes are supported in this release:
 
 * `DATABASE` - A separate database with a separate connection pool is used to store each tenants data (supported in GORM for Hibernate, MongoDB and Neo4j).
-* `SCHEMA` - The same database, but different schemas are used to store each tenants data (supported in GORM for MongoDB).
+* `SCHEMA` - The same database, but different schemas are used to store each tenants data (supported in GORM for MongoDB and Hibernate).
 * `DISCRIMINATOR` - The same database is used with a discriminator used to partition and isolate data (supported in GORM for Hibernate, MongoDB and Neo4j).
 
 For more information, see the documentation on link:../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] in the user guide.
@@ -240,10 +240,10 @@ All of the new GORM features are also supported including multiple data sources,
 
 === RxGORM for REST
 
-link:../../rx/rest-client/index.html[RxGORM for REST] builds on RxNetty and provides an advanced REST client for communicating with backend REST applications.
+link:/latest/rx/rest-client/index.html[RxGORM for REST] builds on RxNetty and provides an advanced REST client for communicating with backend REST applications.
 
 RxGORM for REST is built on the same JSON encoding/decoding engine as GORM for MongoDB and hence is already robust and performant.
 
 In addition it has builtin understanding of common JSON formats such as HAL to automatically implemented eager fetching and common features associated with object mapping libraries.
 
-See the documentation for link:../../rx/rest-client/index.html[RxGORM for REST] for more information.
+See the documentation for link:/latest/rx/rest-client/index.html[RxGORM for REST] for more information.
