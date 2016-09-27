@@ -6,8 +6,6 @@ RxGORM builds ontop of http://reactivex.io[RxJava] and provides a completely non
 
 Currently only MongoDB is supported as a backing store, however implementations are planned for SQL, REST client and other NoSQL datastores in the future (subject to driver support)
 
-NOTE: RxGORM is still at the milestone phase and this document is still evolving and subject to change!
-
 == Getting Started
 
 === Installation
