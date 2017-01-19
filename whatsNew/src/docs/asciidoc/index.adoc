@@ -119,6 +119,32 @@ class Product {
 }
 ----
 
+=== Automatic Escaping for HQL Queries
+
+You can now pass Groovy's `GString` instances directly as HQL queries and these will be automatically escaped avoiding HQL-injection attacks:
+
+[source,groovy]
+----
+String name = 'coffee'
+Product p = Product.find("from Product as p where p.name = $name")
+----
+
+=== Support for Native SQL Queries
+
+By implementing the `HibernateEntity` trait you can gain additional methods for using native SQL queries that feature the same automatic escaping for GString instances to avoid SQL-injection attacks:
+
+[source,groovy]
+----
+import grails.gorm.hibernate.*
+
+class Product implements HibernateEntity<Product> {
+    ...
+}
+
+String name = 'coffee'
+Product p = Product.findWithSql("select * from product p where p.name = $name")
+----
+
 === Smart Hibernate Dirty Checking
 
 GORM's `DirtyCheckable` AST transformations have been integrated with Hibernate's custom dirty checking API improving performance and increasing efficiency when doing large updates.
