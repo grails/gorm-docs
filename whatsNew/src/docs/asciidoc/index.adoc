@@ -38,7 +38,7 @@ class TeamService {
     }
 
     // use the tenant id "another" for all GORM logic within the method
-    @Tenant({"two"})
+    @Tenant({"another"})
     List<Team> allTwoTeams() {
         Team.list()
     }
