@@ -1,249 +1,218 @@
-= What's New in GORM 6?
+= What's New in GORM 6.1?
 :author: Graeme Rocher
 :email: graeme.rocher@gmail.com
 :source-highlighter: coderay
 
 == Introduction
 
-GORM 6 is a major new release of the GORM toolkit. This guide will take you through the changes and new features in GORM.
+GORM 6.1 builds on the concepts introduced in GORM 6 around Multi-Tenancy and includes a number of notable improvements.
 
+TIP: To see all of the features introduced in GORM 6, see the http://gorm.grails.org/6.0.x/whatsNew/manual/[What's New guide for GORM 6.0].
 
-=== Spring Container-free Bootstrapping
+The following sections cover the new features in GORM 6.1.
 
-Previous versions of GORM relied on the Spring container to load and configure GORM. As of GORM 6 the Spring container is no longer required to use GORM. You can trivially load GORM using the constructor of each implementation.
+== New General Features
 
-For example given the following GORM entity:
+=== Multi-Tenancy Transformations
+
+There are new transformations that can be applied to any class that simplify greatly the development of Multi-Tenant applications. These include:
+
+- `@CurrentTenant` - Resolve the current tenant for the context of a class or method
+- `@Tenant` - Use a specific tenant for the context of a class or method
+- `@WithoutTenant` - Execute logic without a specific tenant (using the default connection)
+
+For example:
 
 [source,groovy]
 ----
-import grails.gorm.annotation.*
+import grails.gorm.multitenancy.*
 
-@Entity
-class Person {
-    String name
+// resolve the current tenant for every method
+@CurrentTenant
+class TeamService {
+
+    // execute the countPlayers method without a tenant id
+    @WithoutTenant
+    int countPlayers() {
+        Player.count()
+    }
+
+    // use the tenant id "another" for all GORM logic within the method
+    @Tenant({"two"})
+    List<Team> allTwoTeams() {
+        Team.list()
+    }
+
+    List<Team> listTeams() {
+        Team.list(max:10)
+    }
+
+    @Transactional
+    void addTeam(String name) {
+        new Team(name:name).save(flush:true)
+    }
 }
 ----
 
-To load GORM for Hibernate you can do:
+=== Support for Bean Validation API
+
+If you prefer to use the standard http://beanvalidation.org[Bean Validation API] for validation, this is now possible with GORM. If you are using GORM for Hibernate simply add the necessary annotations to your entity:
+
+[source,groovy]
+----
+import javax.validation.constraints.*
+
+class Product {
+    String name
+    @Digits
+    String price
+}
+----
+
+If you are using another implementation you will need to add the `hibernate-validator` dependency to your `build.gradle`:
+
+[source,groovy]
+----
+compile('org.hibernate:hibernate-validator:5.2.4.Final')
+----
+
+=== Support for Scanning Packages
+
+The constructors for `HibernateDatastore`, `MongoDatastore` and `Neo4jDatastore` have been updated to support an array of `Package` instances representing the packages to scan for entities. This makes it easier to setup GORM outside of Grails or within unit tests. For example for Hibernate:
 
 [source,groovy]
 ----
 import org.grails.orm.hibernate.*
 
-HibernateDatastore datastore = new HibernateDatastore(Person)
-
-println Person.count()
+HibernateDatastore datastore = new HibernateDatastore(Package.getPackage("foo.bar"))
 ----
 
-To load GORM for Neo4j:
+== New Hibernate Features
+
+=== Hibernate 5.2 Support
+
+Support for Hibernate 5.2 has been added (requires Java 8 minimum) and can be enabled by declaring an explicit dependency on Hibernate 5.2:
 
 [source,groovy]
 ----
-import org.grails.datastore.gorm.neo4j.*
-
-Neo4jDatastore datastore = new Neo4jDatastore(Person)
-
-println Person.count()
+compile("org.hibernate:hibernate-core:5.2.0.Final")
 ----
 
-To load GORM for MongoDB:
+=== JPA Mapping Support
+
+Support for using JPA-annotated entites instead of GORM's DSL for entities written in Groovy has been added. For example:
 
 [source,groovy]
 ----
-import org.grails.datastore.mapping.mongo.*
+import javax.persistence.*
+import javax.validation.constraints.*
 
-MongoDatastore datastore = new MongoDatastore(Person)
+@Entity
+class Product {
+    @Id
+    @GeneratedValue
+    Long id
+    String name
 
-println Person.count()
-----
-
-Configuration can be passed as a map to the first argument of the constructor.
-
-=== Improved Unit Testing
-
-Thanks to the improvements around bootstrapping and dropping of the requirement for a Spring container it is much easier to unit test GORM without requiring special framework support.
-
-For example the following Spock specification can be used to test GORM for Hibernate:
-
-[source,groovy]
-----
-import spock.lang.*
-import grails.gorm.annotation.Entity
-import grails.transaction.Rollback
-import org.grails.orm.hibernate.HibernateDatastore
-import org.springframework.transaction.PlatformTransactionManager
-
-class ExampleSpec extends Specification {
-
-    @Shared @AutoCleanup HibernateDatastore hibernateDatastore
-    @Shared PlatformTransactionManager transactionManager
-
-    void setupSpec() {
-       hibernateDatastore = new HibernateDatastore(Person)
-       transactionManager = hibernateDatastore.getTransactionManager()
-    }
-
-    @Rollback
-    void "test execute GORM standalone in a unit test"() {
-       // your logic here
-    }
+    @Digits(integer = 6, fraction = 2)
+    String price
 }
 ----
 
-=== Unified Configuration Model
+=== Smart Hibernate Dirty Checking
 
-In previous versions of GORM each implementation was responsible for implementing the reading of configuration separately. In GORM 6 a new unified configuration model has been introduced to reduce inconsistencies.
+GORM's `DirtyCheckable` AST transformations have been integrated with Hibernate's custom dirty checking API improving performance and increasing efficiency when doing large updates.
 
-The link:../../hibernate/api/org/grails/datastore/mapping/core/connections/ConnectionSourceSettings.html[ConnectionSourceSettings] represents common configuration across all implementations and has subclasses such as link:../../hibernate/api/org/grails/orm/hibernate/connections/HibernateConnectionSourceSettings.html[HibernateConnectionSourceSettings] for each implementation of GORM.
+=== Hibernate Managed Entity Transform
 
-You can obtain the materialized configuration of any implementation using the new `ConnectionSources` API (discussed in the next section). For example:
+An optional `@ManagedEntity` transformation has been added which can be applied to Hibernate entities which performs the same enhancements as Hibernate's https://docs.jboss.org/hibernate/orm/5.0/topical/html/bytecode/BytecodeEnhancement.html[Build time byte code enhancement] without the need for an additional Gradle plugin.
 
-[source,groovy]
-----
-HibernateDatastore datastore = .. // obtain the datastore
-HibernateConnectionSourceSettings settings =
-    datastore.connectionSources.defaultConnectionSource.settings
-----
+By applying `@ManagedEntity` to a class the class benefits from:
 
-=== New ConnectionSources API
+1. Lazy state initialization
+2. Dirtiness tracking
+3. Automatic bi-directional association management
+4. Performance optimizations
 
-The logic for setting up multiple data sources was previously hardcoded within the Hibernate plugin. This has been abstracted out into the new link:../../hibernate/api/org/grails/datastore/mapping/core/connections/ConnectionSources.html[ConnectionSources] API which operates in conjuction with the aforementioned configuration API to provide a consistent implementation across all GORM implementations.
+This includes eliminating the need to generate proxies for the entity.
 
-You can use the `ConnectionSources` API to iterate over the configured data sources and introspect the state the configured GORM datastore:
+NOTE: There are some behavioural differences in lazy loading between `@ManagedEntity` enhanced entities and normal entities, hence why these enhancements are not applied by default and are opt-in.
 
-[source,groovy]
-----
-HibernateDatastore datastore = .. // obtain the datastore
+== New MongoDB Features
 
-for(ConnectionSource<SessionFactory, HibernateConnectionSourceSettings> connectionSource in datastore.connectionSources) {
-    String name = connectionSource.name
-    SessionFactory sessionFactory = connectionSource.source
-    // perform an operation with the session factory
-}
-----
+=== Decimal128 Support
 
-Or in Neo4j:
+Support for MongoDB 3.4's new `Decimal128` type for representing `BigDecimal` values in Java has been added.
+
+=== New findOneAndDelete Method
+
+A new method to simplify using `findOneAndDelete` with native queries has been added:
 
 [source,groovy]
 ----
-Neo4jDatastore datastore = .. // obtain the datastore
+import static com.mongodb.client.model.Filters.*
 
-for(ConnectionSource<Driver, Neo4jConnectionSourceSettings> connectionSource in datastore.connectionSources) {
-    String name = connectionSource.name
-    Driver boltDriver = connectionSource.source
-    // perform an operation with the Bolt driver
-}
+Product p = Product.findOneAndDelete(eq("title", "coffee"))
 ----
 
-Or in MongoDB:
+== New Neo4j Features
+
+=== Relationship Entity Support
+
+In addition to being able to map a domain class to a Neo4j `Node`, since 6.1 you are able to map a domain class to a Neo4j `Relationship`.
+
+For example consider the following domain model:
 
 [source,groovy]
 ----
-MongoDatastore datastore = .. // obtain the datastore
+import grails.neo4j.*
 
-for(ConnectionSource<MongoClient, MongoConnectionSourceSettings> connectionSource in datastore.connectionSources) {
-    String name = connectionSource.name
-    MongoClient mongoClient = connectionSource.source
-    // perform an operation with MongoDB client
-}
-----
-
-=== Multiple Data Sources support in MongoDB and Neo4j
-
-GORM for Hibernate has had support for multiple data sources for while now, however this feature was missing in other GORM implementations.
-
-Building on the `ConnectionSources` API multiple data sources support has been implemented in MongoDB and Neo4j. For example for MongoDB:
-
-[source,yaml]
-.grails-app/conf/application.yml
-----
-grails:
-    mongodb:
-        url: mongodb://localhost/books
-        connections:
-            moreBooks:
-                url: mongodb://localhost/moreBooks
-            evenMoreBooks:
-                url: mongodb://localhost/moreBooks
-----
-
-You can then switch to a different connection at runtime with the `withConnection` method:
-
-[source,groovy]
-----
-Book.withConnection("moreBooks") {
-    Book.list()
-}
-----
-
-And map domain classes to specific connections:
-
-[source,groovy]
-----
-class Book {
-    ObjectId id
+class Movie {
     String title
+    static hasMany = [cast:CastMember]
+}
+
+class CastMember implements Relationship<Person, Movie> {
+    List<String> roles = []
+}
+
+class Person {
+    String name
+    static hasMany = [appearances:CastMember]
+}
+----
+
+The `CastMember` class implements the `Relationship` trait which takes two generic arguments: The class that represents the start of the relationship and the class that represents the end.
+
+You can then use regular GORM methods to query the `CastMember` relationship. In addition because Neo4j relationships are dynamic you can assign additional properties to them at runtime. For example:
+
+[source,groovy]
+----
+def castMember = new CastMember(
+    from: new Person(name: "Keanu"),
+    to: new Movie(title: "The Matrix"),
+    roles: ["Neo"])
+
+castMember['realName'] = "Thomas Anderson"
+castMember.save(flush:true)
+----
+
+=== Relationship Mapping Support
+
+More control over how relationships are mapped has been added via the `mapping` block. For example:
+
+[source,groovy]
+----
+import static grails.neo4j.Direction.*
+
+class Owner {
+    String name
+    static hasMany = [pets:Pet]
+
     static mapping = {
-        connections "books", "moreBooks"
+         pets type:"PETZ", direction:BOTH
     }
 }
 ----
 
-The same feature has been implemented for GORM for Neo4j:
-
-[source,yaml]
-.grails-app/conf/application.yml
-----
-grails:
-    neo4j:
-        url: bolt://localhost:7687
-        connections:
-            moreBooks:
-                url: bolt://localhost:7688
-            evenMoreBooks:
-                url: bolt://localhost:7689
-----
-
-The syntax for mapping domain classes is the same as for MongoDB.
-
-=== Multi-Tenancy Support
-
-Support for link:../../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] has been added for GORM for Hibernate, MongoDB and Neo4j.
-
-Three different modes are supported in this release:
-
-* `DATABASE` - A separate database with a separate connection pool is used to store each tenants data (supported in GORM for Hibernate, MongoDB and Neo4j).
-* `SCHEMA` - The same database, but different schemas are used to store each tenants data (supported in GORM for MongoDB and Hibernate).
-* `DISCRIMINATOR` - The same database is used with a discriminator used to partition and isolate data (supported in GORM for Hibernate, MongoDB and Neo4j).
-
-For more information, see the documentation on link:../hibernate/manual/index.html#multiTenancy[Multi-Tenancy] in the user guide.
-
-=== GORM for Neo4j 3.x Bolt Driver
-
-GORM for Neo4j has been upgraded to Neo4j 3.x and the Bolt Java driver. Bolt is a high performance binary protocol for the Neo4j graph, which means that GORM for Neo4j is now better suited for applications that require Neo4j to be running in server mode (as opposed to embedded).
-
-See the link:../../neo4j/manual/index.html[GORM for Neo4j] documentation for more information about GORM and Neo4j 3.x Bolt.
-
-=== RxGORM - GORM for RxJava
-
-A new GORM API called RxGORM has been implemented that rethinks how object mapping libraries can be written for Reactive applications.
-
-RxGORM builds on the hugely popular (and pretty much industry standard), RxJava framework to provide a reactive, stateless, non-blocking implementation of GORM.
-
-The initial release of RxGORM includes two backend implementations. RxGORM for MongoDB and RxGORM for REST, with more planned for the future.
-
-=== RxGORM for MongoDB
-
-link:../../rx/manual/index.html[RxGORM for MongoDB] builds on the MongoDB Rx driver and provides a non-blocking RxGORM API for MongoDB.
-
-All of the new GORM features are also supported including multiple data sources, multi tenancy and so on.
-
-=== RxGORM for REST
-
-link:/latest/rx/rest-client/index.html[RxGORM for REST] builds on RxNetty and provides an advanced REST client for communicating with backend REST applications.
-
-RxGORM for REST is built on the same JSON encoding/decoding engine as GORM for MongoDB and hence is already robust and performant.
-
-In addition it has builtin understanding of common JSON formats such as HAL to automatically implemented eager fetching and common features associated with object mapping libraries.
-
-See the documentation for link:/latest/rx/rest-client/index.html[RxGORM for REST] for more information.
+The `type` and `direction` settings can be used to specify the relationship type and direction.
