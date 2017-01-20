@@ -26,9 +26,13 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
         version="$TRAVIS_TAG"
         version=${version:1}
 
-        mkdir -p latest
-        cp -r ../build/docs/. ./latest/
-        git add latest/*
+        if [[ $TRAVIS_TAG =~ [M\d|RC\d] ]]; then            
+           echo "Publishing Milestone Release"  
+        else 
+            mkdir -p latest
+            cp -r ../build/docs/. ./latest/
+            git add latest/*
+        fi            
 
         majorVersion=${version:0:4}
         majorVersion="${majorVersion}x"
