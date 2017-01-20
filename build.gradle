@@ -21,9 +21,12 @@ ext {
 
 	coreProjects = [
 		'core',
-		'simple',
 		'web',
 		'gorm',
+		'gorm-async',
+		'gorm-test',
+		'gorm-support',
+		'gorm-validation',
 		'gorm-plugin-support'
 	]
 
