@@ -54,6 +54,39 @@ class TeamService {
 }
 ----
 
+=== GORM Data Services
+
+GORM now features a http://gorm.grails.org/6.1.x/hibernate/manual/index.html#dataServices[Data Services] concept that adds the ability to generate implementations for Groovy interfaces using conventions that GORM developers are already familiar with.
+
+For example given the following interface:
+
+[source,groovy]
+----
+import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.services.Service
+
+@Service(Book)
+@CurrentTenant
+interface BookService {
+
+    Book find(Serializable id)
+
+    List<Book> findBooks(Map args)
+
+    Number count()
+
+    Book saveBook(String title)
+
+    Book updateBook(Serializable id, String title)
+
+    Book deleteBook(Serializable id)
+}
+----
+
+An implementation for the above interface will be generated at compile time and made available to your application.
+
+See the documentation on http://gorm.grails.org/6.1.x/hibernate/manual/index.html#dataServices[Data Services] for more information.
+
 === Support for Bean Validation API
 
 If you prefer to use the standard http://beanvalidation.org[Bean Validation API] for validation, this is now possible with GORM. If you are using GORM for Hibernate simply add the necessary annotations to your entity:
