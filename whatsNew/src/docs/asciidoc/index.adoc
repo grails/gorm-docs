@@ -1,6 +1,5 @@
 = What's New in GORM 6.1?
 :author: Graeme Rocher
-:email: graeme.rocher@gmail.com
 :source-highlighter: coderay
 
 == Introduction
