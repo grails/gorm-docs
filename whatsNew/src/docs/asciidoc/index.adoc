@@ -109,6 +109,38 @@ If you are using another implementation you will need to add the `hibernate-vali
 compile('org.hibernate:hibernate-validator:5.2.4.Final')
 ----
 
+=== Improved Mapping DSL
+
+The GORM Mapping DSL has been improved for all implementations, allowing code completion in IDEs and static compilation. For example for Hibernate:
+
+[source,groovy]
+----
+import static grails.gorm.hibernate.mapping.MappingBuilder.*
+
+class Book {
+    String title
+
+    static final mapping = orm {
+        table {
+            schema "library"
+            name "books"
+        }
+        cache {
+            enabled true
+            usage 'read'
+        }
+        title = property {
+            nullable true
+            column {
+                length 250
+            }
+        }
+    }
+}
+----
+
+For Neo4j and MongoDB there are equivalent classes called `grails.neo4j.mapping.MappingBuilder` and `grails.mongodb.mapping.MappingBuilder` respectively.
+
 === Support for Scanning Packages
 
 The constructors for `HibernateDatastore`, `MongoDatastore` and `Neo4jDatastore` have been updated to support an array of `Package` instances representing the packages to scan for entities. This makes it easier to setup GORM outside of Grails or within unit tests. For example for Hibernate:
@@ -212,6 +244,15 @@ A new method to simplify using `findOneAndDelete` with native queries has been a
 import static com.mongodb.client.model.Filters.*
 
 Product p = Product.findOneAndDelete(eq("title", "coffee"))
+----
+
+=== ReadConcern supported in Queries
+
+You can now pass the `ReadConcern` to use to GORM queries:
+
+[source,groovy]
+----
+Person.findAllByFirstName("Bob", [readConcern: ReadConcern.MAJORITY])
 ----
 
 == New Neo4j Features
