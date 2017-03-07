@@ -48,7 +48,7 @@ configurations {
 }
 
 dependencies {
-	documentation "org.codehaus.groovy:groovy-all:2.4.6"
+	documentation "org.codehaus.groovy:groovy-all:$groovyVersion"
 	documentation 'org.fusesource.jansi:jansi:1.12'
 	for(p in coreProjects) {
 		documentation "org.grails:grails-datastore-$p:$gormVersion"	
@@ -117,7 +117,7 @@ subprojects { project ->
 
 	def apiDocProjects = implementationProjects.get(project.name)
 	dependencies {
-		documentation "org.codehaus.groovy:groovy-all:2.4.6"
+		documentation "org.codehaus.groovy:groovy-all:$groovyVersion"
 		documentation 'org.fusesource.jansi:jansi:1.12'
 		if(apiDocProjects) {
 			for(p in apiDocProjects) {
