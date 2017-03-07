@@ -53,6 +53,24 @@ class TeamService {
 }
 ----
 
+=== More Flexible Transactional Transforms
+
+The `grails.transaction.Transactional` transform from Grails core has been ported to GORM and can now be found in the `grails.gorm.transactions` package.
+
+These are replacements for Grails' core transforms and can be used outside of Grails. In addition they are more flexible and allow specifying the target connection in multiple datasource scenarios.
+
+A new `grails.gorm.transactions.ReadOnly` transformation has also been added to make it easier to encapsulate the default semantics for a read-only transaction.
+
+=== Common GORM Services
+
+A new set of common services has been added to GORM for dealing with Multi-Tenancy and Transactions:
+
+* http://gorm.grails.org/6.1.x/api/grails/gorm/multitenancy/TenantService.html[TenantService] - methods for working with Multi-Tenancy, including obtaining the current tenant and switching tenants
+* http://gorm.grails.org/6.1.x/api/grails/gorm/transactions/TransactionService.html[TransactionService] - methods for aiding with the creation of programmatic transactions.
+
+Both of these services can be obtained via the `Datastore.getService(..)` method or via dependency injection.
+
+
 === GORM Data Services
 
 GORM now features a http://gorm.grails.org/6.1.x/hibernate/manual/index.html#dataServices[Data Services] concept that adds the ability to generate implementations for Groovy interfaces using conventions that GORM developers are already familiar with.
