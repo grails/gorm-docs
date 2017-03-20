@@ -15,6 +15,7 @@ buildscript {
 import org.groovy.lang.groovydoc.tasks.GroovydocTask
 
 ext {
+	groovyVersion = "2.4.10"
 	githubBranch = "master"
 	checkOutDir = "build/checkout"
 	zipFile = "build/source.zip"
