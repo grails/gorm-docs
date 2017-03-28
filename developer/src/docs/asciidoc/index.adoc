@@ -55,7 +55,6 @@ include::understandingApi/gormApis.adoc[]
 include::testing.adoc[]
 
 [[stepByStep]]
-== Step by Step Guide to Creating and Implementation
+== Step by Step Guide to Creating an Implementation
 
 include::stepByStep.adoc[]
-
