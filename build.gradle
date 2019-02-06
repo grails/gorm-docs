@@ -32,7 +32,7 @@ ext {
 	]
 
 	implementationProjects = [
-		rx: coreProjects + ['gorm-rx', 'gorm-rx-plugin-support']
+		rx: coreProjects + ['gorm-rx']
 	]
 }
 
