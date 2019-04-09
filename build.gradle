@@ -27,8 +27,7 @@ ext {
 		'gorm-async',
 		'gorm-test',
 		'gorm-support',
-		'gorm-validation',
-		'gorm-plugin-support'
+		'gorm-validation'
 	]
 
 	implementationProjects = [
