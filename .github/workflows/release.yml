@@ -1,5 +1,9 @@
 name: Release
 on:
+  push:
+    branches:
+      - master
+      - '[7-9]+.[0-9]+.x'
   workflow_dispatch:
     inputs:
       gorm_version:
@@ -12,7 +16,7 @@ jobs:
       matrix:
         java: ['8']
     env:
-      BETA: ${{ contains(inputs.gorm_version, 'M') || contains(inputs.gorm_version, 'RC') }}
+      BETA: ${{ contains(github.event.inputs.gorm_version, 'M') || contains(github.event.inputs.gorm_version, 'RC') }}
       GIT_USER_NAME: puneetbehl
       GIT_USER_EMAIL: behlp@objectcomputing.com
     steps:
@@ -25,6 +29,39 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
+      - name: Extract branch name
+        if: success() && github.event_name == 'workflow_dispatch'
+        id: extract_branch
+        run: echo ::set-output name=value::${GITHUB_REF:11}
+      - name: Asset Path
+        if: success() && github.event_name == 'workflow_dispatch'
+        id: asset_path
+        uses: haya14busa/action-cond@v1
+        with:
+          cond: ${{ env.BETA == '' || env.BETA == 'false' }}
+          if_true: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.RELEASE.zip
+          if_false: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
+        env:
+          PATH_PREFIX: "./build/distributions/gorm-docs"
+      - name: Tag and Release Docs
+        uses: ./.github/actions/tag-and-release
+        if: success() && github.event_name == 'workflow_dispatch'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gorm_version: ${{ github.event.inputs.gorm_version }}
+        env:
+          TARGET_BRANCH: ${{ steps.extract_branch.outputs.value }}
+      - name: Create Release
+        if: success() && github.event_name == 'workflow_dispatch'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.gorm_version }}
+          release_name: Release ${{ github.event.inputs.gorm_version }}
+          draft: false
+          prerelease: ${{ env.BETA }}
       - name: Publish Documentation
         run: |
           ./gradlew --stop
@@ -32,29 +69,15 @@ jobs:
           (set -x; ./gradlew groovydoc --no-daemon)
           (set -x; ./gradlew docs --no-daemon)
           (set -x; ./gradlew assemble --no-daemon)
-      - name: Tag and Release Docs
-        uses: .github/actions/tag-and-release
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gorm_version: ${{ inputs.gorm_version }}
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ inputs.gorm_version }}
-          release_name: Release ${{ inputs.gorm_version }}
-          draft: false
-          prerelease: ${{ env.BETA }}
       - name: Upload Release Asset
+        if: success() && github.event_name == 'workflow_dispatch'
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/distributions/gorm-docs-${gorm_version}.zip
+          asset_path: ${{ steps.asset_path.outputs.value }}
           asset_name: gorm-docs.zip
           asset_content_type: application/zip
       - name: Determine docs target repository
@@ -63,7 +86,7 @@ jobs:
         id: docs_target
         with:
           cond: ${{ github.repository == 'grails/gorm-docs' }}
-          if_true: "grails/grails-data-mapping"
+          if_true: 'grails/grails-data-mapping'
           if_false: ${{ github.repository }}
       - name: Publish to Github Pages
         if: success()
@@ -73,6 +96,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           BRANCH: gh-pages
           FOLDER: build/docs
+          VERSION: ${{ github.event.inputs.gorm_version }}
           DOC_FOLDER: gh-pages
           COMMIT_EMAIL: ${{ env.GIT_USER_EMAIL }}
           COMMIT_NAME: ${{ env.GIT_USER_NAME }}
