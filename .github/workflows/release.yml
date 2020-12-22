@@ -1,0 +1,58 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      gorm_version:
+        description: 'Gorm Version (eg: 7.0.8)'
+        required: true
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['8']
+    env:
+      BETA: ${{ contains(inputs.gorm_version, 'M') || contains(inputs.gorm_version, 'RC') }}
+      GIT_USER_NAME: puneetbehl
+      GIT_USER_EMAIL: behlp@objectcomputing.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - uses: gradle/wrapper-validation-action@v1
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Tag and Release Docs
+        uses: .github/actions/tag-and-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gorm_version: ${{ inputs.gorm_version }}
+      - name: Publish Documentation
+        run: |
+          ./gradlew --stop
+          (set -x; ./gradlew asciidoctor --no-daemon)
+          (set -x; ./gradlew groovydoc --no-daemon)
+          (set -x; ./gradlew docs --no-daemon)
+          (set -x; ./gradlew assemble --no-daemon)
+      - name: Determine docs target repository
+        if: success()
+        uses: haya14busa/action-cond@v1
+        id: docs_target
+        with:
+          cond: ${{ github.repository == 'grails/gorm-docs' }}
+          if_true: "grails/grails-data-mapping"
+          if_false: ${{ github.repository }}
+      - name: Publish to Github Pages
+        if: success()
+        uses: micronaut-projects/github-pages-deploy-action@master
+        env:
+          TARGET_REPOSITORY: ${{ steps.docs_target.outputs.value }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build/docs
+          DOC_FOLDER: gh-pages
+          COMMIT_EMAIL: ${{ env.GIT_USER_EMAIL }}
+          COMMIT_NAME: ${{ env.GIT_USER_NAME }}
