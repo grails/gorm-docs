@@ -1,6 +1,10 @@
 cache:
   directories:
   - "$HOME/.gradle"
+branches:
+  only:
+    - 6.0.x
+    - 6.1.x
 jdk:
 - openjdk8
 before_script:

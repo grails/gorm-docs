@@ -1,0 +1,16 @@
+name: 'GORM Docs Release Action'
+description: 'Update gormVersion and add release tag'
+inputs:
+  token:
+    description: 'GitHub token to authenticate the requests'
+    required: true
+    default: ${{ github.token }}
+  gorm_version:
+    description: 'GORM Release Version'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.token }}
+    - ${{ inputs.gorm_version }}
