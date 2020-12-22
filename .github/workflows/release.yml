@@ -25,11 +25,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-      - name: Tag and Release Docs
-        uses: .github/actions/tag-and-release
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gorm_version: ${{ inputs.gorm_version }}
       - name: Publish Documentation
         run: |
           ./gradlew --stop
@@ -37,6 +32,31 @@ jobs:
           (set -x; ./gradlew groovydoc --no-daemon)
           (set -x; ./gradlew docs --no-daemon)
           (set -x; ./gradlew assemble --no-daemon)
+      - name: Tag and Release Docs
+        uses: .github/actions/tag-and-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gorm_version: ${{ inputs.gorm_version }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.gorm_version }}
+          release_name: Release ${{ inputs.gorm_version }}
+          draft: false
+          prerelease: ${{ env.BETA }}
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/distributions/gorm-docs-${gorm_version}.zip
+          asset_name: gorm-docs.zip
+          asset_content_type: application/zip
       - name: Determine docs target repository
         if: success()
         uses: haya14busa/action-cond@v1
