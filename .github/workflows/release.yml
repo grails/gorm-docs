@@ -37,8 +37,8 @@ jobs:
           (set -x; ./gradlew docs --no-daemon)
           (set -x; ./gradlew assemble --no-daemon)
       - name: Tag and Release Docs
+        uses: ./.github/actions/tag-and-release
         if: success() && github.event_name == 'workflow_dispatch'
-        uses: .github/actions/tag-and-release/
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           gorm_version: ${{ github.event.inputs.gorm_version }}
