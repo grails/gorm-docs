@@ -2,6 +2,7 @@ name: Release
 on:
   push:
     branches:
+      - releaseDocs
       - master
       - '[7-9]+.[0-9]+.x'
   workflow_dispatch:
