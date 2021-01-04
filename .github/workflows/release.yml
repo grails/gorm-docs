@@ -44,7 +44,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           gorm_version: ${{ github.event.inputs.gorm_version }}
       - name: Create Release
-        if: success() && github.event_name == "workflow_dispatch"
+        if: success() && github.event_name == 'workflow_dispatch'
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -71,7 +71,7 @@ jobs:
         id: docs_target
         with:
           cond: ${{ github.repository == 'grails/gorm-docs' }}
-          if_true: "grails/grails-data-mapping"
+          if_true: 'grails/grails-data-mapping'
           if_false: ${{ github.repository }}
       - name: Publish to Github Pages
         if: success()
