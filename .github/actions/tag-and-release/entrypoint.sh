@@ -17,11 +17,11 @@ echo "Configuring git"
 git config --global user.email "$GIT_USER_EMAIL"
 git config --global user.name "$GIT_USER_NAME"
 
-echo -n "Determining target branch: "
-target_branch=`cat $GITHUB_EVENT_PATH | jq '.release.target_commitish' | sed -e 's/^"\(.*\)"$/\1/g'`
-echo $target_branch
-git checkout $target_branch
-git pull origin $target_branch
+#echo -n "Determining target branch: "
+#TARGET_BRANCH=`cat $GITHUB_EVENT_PATH | jq '.release.target_commitish' | sed -e 's/^"\(.*\)"$/\1/g'`
+#echo $TARGET_BRANCH
+git checkout $TARGET_BRANCH
+git pull origin $TARGET_BRANCH
 
 echo "Setting release version in gradle.properties"
 if [ -z "$BETA" ] || [ "$BETA" = "false" ]; then
@@ -34,7 +34,7 @@ cat gradle.properties
 echo "Pushing release version and recreating v${gorm_version} tag"
 git add gradle.properties
 git commit -m "Release v${gorm_version}"
-git push origin $target_branch
+git push origin $TARGET_BRANCH
 git push origin :refs/tags/v${gorm_version}
 git tag -fa v${gorm_version} -m "Release v${gorm_version}"
-git push origin $target_branch --tags
+git push origin $TARGET_BRANCH --tags
