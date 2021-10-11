@@ -34,4 +34,4 @@ Book.where {
 }
 ----
 
-For more information on the syntax of where queries see the http://docs.grails.org/latest/guide/GORM.html#whereQueries[relevant section in the GORM documentation].
+For more information on the syntax of where queries see the https://docs.grails.org/latest/guide/GORM.html#whereQueries[relevant section in the GORM documentation].

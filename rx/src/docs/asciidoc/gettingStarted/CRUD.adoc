@@ -13,7 +13,7 @@ new Book(title:"The Stand")
         .first()
 ----
 
-The `save()` method returns an http://reactivex.io/RxJava/javadoc/rx/Observable.html[rx.Observable].
+The `save()` method returns an https://reactivex.io/RxJava/javadoc/rx/Observable.html[rx.Observable].
 
 Notice that in this example we are calling `toBlocking()`, this is purely for demonstration and testing purposes to ensure the operation completes immediately.
 
@@ -45,7 +45,7 @@ Book.get(id)
 
 ==== Update - Updating instances
 
-To update an instance after retreiving it you can use the http://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
+To update an instance after retreiving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
 
 [source,groovy]
 ----
@@ -58,7 +58,7 @@ Book.get(id)
 }
 ----
 
-The `switchMap` transforms an `Observable` and converters the result into another `Observable`. However, this is not the most efficient way to perform updates as you can use http://docs.grails.org/latest/guide/GORM.html#whereQueries[where queries] to update an instance without retrieving it:
+The `switchMap` transforms an `Observable` and converters the result into another `Observable`. However, this is not the most efficient way to perform updates as you can use https://docs.grails.org/latest/guide/GORM.html#whereQueries[where queries] to update an instance without retrieving it:
 
 
 [source,groovy]
@@ -73,7 +73,7 @@ Book.where {
 
 ==== Delete - Deleting instances
 
-To delete an instance after retreiving it you can use the http://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
+To delete an instance after retreiving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
 
 [source,groovy]
 ----

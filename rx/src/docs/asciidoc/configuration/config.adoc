@@ -28,7 +28,7 @@ grails:
         connectionString:  mongodb://user:pass@mycompany:27017
 ----
 
-If you are not using Grails you can either provide a `MongoClient` instance directly in the constructor or you can supply an instance of http://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/core/env/PropertyResolver.html[PropertyResolver] with the necessary configuration.
+If you are not using Grails you can either provide a `MongoClient` instance directly in the constructor or you can supply an instance of https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/core/env/PropertyResolver.html[PropertyResolver] with the necessary configuration.
 
 For example:
 
