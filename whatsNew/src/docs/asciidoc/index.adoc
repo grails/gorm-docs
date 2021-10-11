@@ -1,9 +1,10 @@
-= What's New in GORM 7.0?
+= What's New in GORM 7.1?
 :author: Graeme Rocher
 :source-highlighter: coderay
 
-GORM 7.0 upgrades GORM for Java 11 and the latest versions of Hibernate (5.4), MongoDB Java Driver (3.10.0) and Neo4j Java Driver (1.7.2).
+GORM 7.1 upgrades GORM for Java 14 and the latest versions of Hibernate (5.5), MongoDB Java Driver (4.3) and Neo4j Java Driver (4.3).
 
+The main highlight of GORM 7.1 is the support with Apache Groovy 3, which includes a brand new parrot parser and a bunch of improvements to GDK etc.
 
 
 
