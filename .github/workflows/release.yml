@@ -35,7 +35,7 @@ jobs:
         uses: haya14busa/action-cond@v1
         with:
           cond: ${{ env.BETA == '' || env.BETA == 'false' }}
-          if_true: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.RELEASE.zip
+          if_true: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
           if_false: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
         env:
           PATH_PREFIX: "./build/distributions/gorm-docs"
