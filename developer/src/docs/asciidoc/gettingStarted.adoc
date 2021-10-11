@@ -12,7 +12,7 @@ git clone git@github.com:grails/grails-data-mapping.git
 cd grails-data-mapping
 ----
 
-The project has a http://gradle.org[Gradle] build. You will need Intellij 15 or greater to work with the source code.
+The project has a https://gradle.org[Gradle] build. You will need Intellij 15 or greater to work with the source code.
 
 Use the Intellij 15 Gradle tooling to import the project.
 
@@ -57,10 +57,10 @@ The project is essentially a multi-project Gradle build. There is a core API and
 Beyond these core subprojects there are implementations for various datastores. For example:
 
 * `grails-datastore-mongodb/grails-datastore-gorm-hibernate` - GORM for Hibernate
-* `grails-datastore-mongodb/grails-datastore-gorm-mongo` - GORM for MongoDB project [http://grails.org/plugin/mongodb]
-* `grails-datastore-neo4j` - GORM for Neo4j project [http://grails.org/plugin/neo4j]
-* `grails-datastore-redis/grails-datastore-gorm-redis` - GORM for Redis project [http://grails.org/plugin/redis]
-* `grails-datastore-cassandra/grails-datastore-gorm-cassandra` - GORM for Cassandra project [http://grails.org/plugin/cassandra]
+* `grails-datastore-mongodb/grails-datastore-gorm-mongo` - GORM for MongoDB project [https://grails.org/plugin/mongodb]
+* `grails-datastore-neo4j` - GORM for Neo4j project [https://grails.org/plugin/neo4j]
+* `grails-datastore-redis/grails-datastore-gorm-redis` - GORM for Redis project [https://grails.org/plugin/redis]
+* `grails-datastore-cassandra/grails-datastore-gorm-cassandra` - GORM for Cassandra project [https://grails.org/plugin/cassandra]
 
 
 The documentation for each implementation is kept in the documentation subprojects that start with `grails-documentation`. There are documentation projects for the core API, MongoDB, Neo4j, Redis, and Cassandra.
