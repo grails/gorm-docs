@@ -24,11 +24,8 @@ git checkout $TARGET_BRANCH
 git pull origin $TARGET_BRANCH
 
 echo "Setting release version in gradle.properties"
-if [ -z "$BETA" ] || [ "$BETA" = "false" ]; then
-  sed -i "s/^gormVersion.*$/gormVersion\=${gorm_version}.RELEASE/" gradle.properties
-else
-  sed -i "s/^gormVersion.*$/gormVersion\=${gorm_version}/" gradle.properties
-fi
+sed -i "s/^gormVersion.*$/gormVersion\=${gorm_version}/" gradle.properties
+
 cat gradle.properties
 
 echo "Pushing release version and recreating v${gorm_version} tag"
