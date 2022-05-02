@@ -16,6 +16,7 @@ fi
 echo "Configuring git"
 git config --global user.email "$GIT_USER_EMAIL"
 git config --global user.name "$GIT_USER_NAME"
+git config --global --add safe.directory /github/workspace
 
 #echo -n "Determining target branch: "
 #TARGET_BRANCH=`cat $GITHUB_EVENT_PATH | jq '.release.target_commitish' | sed -e 's/^"\(.*\)"$/\1/g'`
