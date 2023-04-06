@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: ['8']
+        java: ['11']
     env:
       BETA: ${{ contains(github.event.inputs.gorm_version, 'M') || contains(github.event.inputs.gorm_version, 'RC') }}
       GIT_USER_NAME: puneetbehl
