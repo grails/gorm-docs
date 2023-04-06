@@ -2,7 +2,6 @@ name: Java CI
 on:
   push:
     branches:
-      - master
       - '[7-9]+.[0-9]+.x'
 jobs:
   release:
@@ -20,16 +19,18 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
       - uses: gradle/wrapper-validation-action@v1
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: ${{ matrix.java }}
+          distribution: 'adopt'
       - name: Publish Documentation
-        run: |
-          ./gradlew --stop
-          (set -x; ./gradlew asciidoctor --no-daemon)
-          (set -x; ./gradlew groovydoc --no-daemon)
-          (set -x; ./gradlew docs --no-daemon)
-          (set -x; ./gradlew assemble --no-daemon)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: asciidoctor groovydoc docs assemble
+        env:
+          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}          
       - name: Determine docs target repository
         if: success()
         uses: haya14busa/action-cond@v1

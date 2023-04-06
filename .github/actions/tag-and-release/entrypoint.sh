@@ -31,7 +31,7 @@ cat gradle.properties
 
 echo "Pushing release version and recreating v${gorm_version} tag"
 git add gradle.properties
-git commit -m "Release v${gorm_version}"
+git commit -m "[skip ci] Release v${gorm_version}"
 git push origin $TARGET_BRANCH
 git push origin :refs/tags/v${gorm_version}
 git tag -fa v${gorm_version} -m "Release v${gorm_version}"
