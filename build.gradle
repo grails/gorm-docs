@@ -12,7 +12,7 @@ buildscript {
 
 ext {
     groovyVersion = "3.0.13"
-    githubBranch = "7.3.x"
+    githubBranch = "8.0.x"
     checkOutDir = "build/checkout"
     explicitGormSrc = System.getProperty("gorm.src") ?: (project.hasProperty('gorm.src') ? project.getProperty("gorm.src") : null)
     gormSrc = explicitGormSrc ? file(explicitGormSrc).absolutePath : "$checkOutDir/gorm-src"
