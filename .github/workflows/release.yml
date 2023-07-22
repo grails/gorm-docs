@@ -57,7 +57,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           TARGET_BRANCH: ${{ steps.extract_branch.outputs.value }}
-          RELEASE_URL: ${{ steps.create_release.outputs.url }}
+          RELEASE_URL: "https://api.github.com/repos/grails/gorm-docs/releases/${{ steps.create_release.outputs.id }}"
           RELEASE_VERSION: ${{ github.event.inputs.gorm_version }}
       - name: Publish Documentation
         uses: gradle/gradle-build-action@v2
@@ -106,5 +106,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           TARGET_BRANCH: ${{ steps.extract_branch.outputs.value }}
-          RELEASE_URL: ${{ steps.create_release.outputs.url }}
+          RELEASE_URL: "https://api.github.com/repos/grails/gorm-docs/releases/${{ steps.create_release.outputs.id }}"
           SNAPSHOT_SUFFIX: -SNAPSHOT
