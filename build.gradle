@@ -33,7 +33,7 @@ ext {
     ]
 }
 
-version project.gormVersion
+version project.projectVersion
 
 repositories {
     mavenCentral()
@@ -71,6 +71,7 @@ task fetchSource {
 allprojects { project ->
 
     version project.gormVersion
+    ext['gormVersion'] = project.projectVersion
 
     apply plugin: 'org.asciidoctor.jvm.convert'
 

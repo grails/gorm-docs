@@ -39,6 +39,13 @@ jobs:
           if_false: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
         env:
           PATH_PREFIX: "./build/distributions/gorm-docs"
+      - name: Run pre-release
+        if: success() && github.event_name == 'workflow_dispatch'
+        uses: grails/github-actions/pre-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.gorm_version }}
       - name: Tag and Release Docs
         uses: ./.github/actions/tag-and-release
         if: success() && github.event_name == 'workflow_dispatch'
@@ -98,3 +105,10 @@ jobs:
           DOC_FOLDER: gh-pages
           COMMIT_EMAIL: ${{ env.GIT_USER_EMAIL }}
           COMMIT_NAME: ${{ env.GIT_USER_NAME }}
+      - name: Run post-release
+        if: success()
+        uses: grails/github-actions/post-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          SNAPSHOT_SUFFIX: -SNAPSHOT
