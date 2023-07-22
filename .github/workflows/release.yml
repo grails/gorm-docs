@@ -28,7 +28,7 @@ jobs:
       - name: Extract branch name
         if: success() && github.event_name == 'workflow_dispatch'
         id: extract_branch
-        run: echo ::set-output name=value::${GITHUB_REF:11}
+        run: echo "value=${GITHUB_REF:11}" >> $GITHUB_OUTPUT
       - name: Asset Path
         if: success() && github.event_name == 'workflow_dispatch'
         id: asset_path
@@ -46,14 +46,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           RELEASE_VERSION: ${{ github.event.inputs.gorm_version }}
-      - name: Tag and Release Docs
-        uses: ./.github/actions/tag-and-release
-        if: success() && github.event_name == 'workflow_dispatch'
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gorm_version: ${{ github.event.inputs.gorm_version }}
-        env:
-          TARGET_BRANCH: ${{ steps.extract_branch.outputs.value }}
       - name: Create Release
         if: success() && github.event_name == 'workflow_dispatch'
         id: create_release
