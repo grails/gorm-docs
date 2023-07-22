@@ -70,7 +70,7 @@ task fetchSource {
 
 allprojects { project ->
 
-    version project.gormVersion
+    version project.projectVersion
     ext['gormVersion'] = project.projectVersion
 
     apply plugin: 'org.asciidoctor.jvm.convert'
