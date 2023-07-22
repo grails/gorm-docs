@@ -12,7 +12,7 @@ jobs:
       matrix:
         java: ['11']
     env:
-      BETA: ${{ contains(github.event.inputs.gorm_version, 'M') || contains(github.event.inputs.gorm_version, 'RC') }}
+      BETA: ${{ contains(github.event.inputs.gorm_version, 'M') }}
       GIT_USER_NAME: puneetbehl
       GIT_USER_EMAIL: behlp@objectcomputing.com
     steps:
@@ -28,7 +28,7 @@ jobs:
       - name: Extract branch name
         if: success() && github.event_name == 'workflow_dispatch'
         id: extract_branch
-        run: echo ::set-output name=value::${GITHUB_REF:11}
+        run: echo "value=${GITHUB_REF:11}" >> $GITHUB_OUTPUT
       - name: Asset Path
         if: success() && github.event_name == 'workflow_dispatch'
         id: asset_path
@@ -88,7 +88,7 @@ jobs:
           if_false: ${{ github.repository }}
       - name: Publish to Github Pages
         if: success()
-        uses: micronaut-projects/github-pages-deploy-action@master
+        uses: micronaut-projects/github-pages-deploy-action@grails
         env:
           TARGET_REPOSITORY: ${{ steps.docs_target.outputs.value }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
