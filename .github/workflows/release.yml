@@ -52,7 +52,7 @@ jobs:
           prerelease: ${{ env.BETA }}
       - name: Run pre-release
         if: success() && github.event_name == 'workflow_dispatch'
-        uses: grails/github-actions/pre-release@v1
+        uses: grails/github-actions/pre-release@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
@@ -101,7 +101,7 @@ jobs:
           COMMIT_NAME: ${{ env.GIT_USER_NAME }}
       - name: Run post-release
         if: success()
-        uses: grails/github-actions/post-release@v1
+        uses: grails/github-actions/post-release@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
