@@ -25,22 +25,10 @@ jobs:
           distribution: 'adopt'
           java-version: 11
       - name: Extract branch name
-        if: success() && github.event_name == 'workflow_dispatch'
         id: extract_branch
         run: echo "value=${GITHUB_REF:11}" >> $GITHUB_OUTPUT
-      - name: Asset Path
-        if: success() && github.event_name == 'workflow_dispatch'
-        id: asset_path
-        uses: haya14busa/action-cond@v1
-        with:
-          cond: ${{ env.BETA == '' || env.BETA == 'false' }}
-          if_true: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
-          if_false: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
-        env:
-          PATH_PREFIX: "./build/distributions/gorm-docs"
       - name: Run pre-release
-        if: success() && github.event_name == 'workflow_dispatch'
-        uses: grails/github-actions/pre-release@main
+        uses: grails/github-actions/pre-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
@@ -58,15 +46,18 @@ jobs:
           GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}          
       - name: Create Release With Assets
         uses: ncipollo/release-action@v1
+        id: create_release
         if: success()
         with:
           tag: v${{ github.event.inputs.gorm_version }}
           name: ${{ github.event.inputs.gorm_version }}
           prerelease: ${{ env.BETA }}
-          artifacts: "${{ steps.asset_path.outputs.value }}"
+          artifacts: ${{ env.PATH_PREFIX }}-${{ github.event.inputs.gorm_version }}.zip
           artifactContentType: application/zip  
           generateReleaseNotes: true   
           token: ${{ secrets.GITHUB_TOKEN }} 
+        env:
+          PATH_PREFIX: "./build/distributions/gorm-docs"
       - name: Determine docs target repository
         if: success()
         uses: haya14busa/action-cond@v1
@@ -94,5 +85,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           TARGET_BRANCH: ${{ steps.extract_branch.outputs.value }}
+          RELEASE_VERSION: ${{ github.event.inputs.gorm_version }}
           RELEASE_URL: "https://api.github.com/repos/grails/gorm-docs/releases/${{ steps.create_release.outputs.id }}"
           SNAPSHOT_SUFFIX: -SNAPSHOT
