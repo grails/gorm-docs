@@ -36,7 +36,7 @@ And then add a `src/main/resources/META-INF/services/org.grails.compiler.gorm.Go
 org.grails.datastore.gorm.neo4j.Neo4jEntityTraitProvider
 ----
 
-GORM will automatically inject the trait into any domain class discovered in `grails-app/domain` or annotated with the `Entity` annotation. However, if Hibernate is present in the classpath, you must inform GORM to map the domain class with Neo4j:
+GORM will automatically inject the trait into any domain class discovered in `grails-app/domain` or annotated with the `Entity` annotation. However, if Hibernate is present on the classpath, you must inform GORM to map the domain class with Neo4j:
 
 [,groovy]
 ----

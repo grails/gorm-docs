@@ -50,9 +50,9 @@ To update an instance after retrieving it you can use the https://reactivex.io/R
 [source,groovy]
 ----
 Book.get(id)
-    .switchMap() { Book it ->
-        it.title = "The Shining"
-        it.save()
+    .switchMap() { Book book ->
+        book.title = "The Shining"
+        book.save()
     }.subscribe { Book updated ->
         println "Book updated!"
     }

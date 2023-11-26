@@ -17,7 +17,7 @@ This is traditionally how most blocking object mapping implementations have work
 
 [source,groovy]
 ----
-for (book in books) {
+for (Book book in books) {
     println "Author: ${book.author.name}"
 }
 ----
@@ -26,7 +26,7 @@ In the above example RxGORM has no choice but to block in order to load the asso
 
 [source,groovy]
 ----
-for (book in books) {
+for (Book book in books) {
     book.author.subscribe { Author author ->
         println "Author: ${author.name}"
     }

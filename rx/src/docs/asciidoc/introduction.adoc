@@ -4,7 +4,7 @@ Async features were added in GORM 4, however these are merely a way to isolate y
 
 RxGORM builds on top of https://reactivex.io[RxJava] and provides a completely non-blocking, stateless implementation of GORM.
 
-Currently, only MongoDB is supported as a backing store. However, implementations are planned for SQL, REST client and other NoSQL data stores in the future (subject to driver support).
+Currently, only MongoDB is supported as a backing store. However, implementations are planned for SQL, REST client and other NoSQL datastores in the future (subject to driver support).
 
 == Getting Started
 

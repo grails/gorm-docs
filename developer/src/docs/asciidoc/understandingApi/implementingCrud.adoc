@@ -190,4 +190,4 @@ protected void deleteEntries(String family, final List<Object> keys) {
 }
 ----
 
-You'll notice that this implementation uses a `MongoQuery` instance. Also, it's important to note that when implementing an `EntityPersister`, you enable basic CRUD operations but not querying. The latter is a subject we'll explore in the following sections. However, before delving into that, we need to cover secondary indices, as they are required for querying.
+You'll notice that this implementation uses a `MongoQuery` instance. Also, it's important to note that when implementing an `EntityPersister`, you enable basic CRUD operations, but not querying. The latter is a subject we'll explore in the following sections. However, before delving into that, we need to cover secondary indices, as they are required for querying.

@@ -1,6 +1,6 @@
-= Discover What's Exciting in GORM 8!
 :author: Puneet Behl
-:source-highlighter: coderay
+
+= Discover What's Exciting in GORM 8!
 
 == GORM 8 Unleashed: Embracing Java 11
 

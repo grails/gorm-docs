@@ -1,4 +1,4 @@
-To get started with your new GORM implementation the following steps are required:
+To get started with a new GORM implementation, the following steps are required:
 
 
 === Initial Directory Creation

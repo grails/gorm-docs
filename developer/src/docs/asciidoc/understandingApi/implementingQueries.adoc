@@ -56,7 +56,7 @@ Collection executeSubQueryInternal(criteria, criteriaList) {
 }
 ----
 
-Note that if a `Junction` is encountered (representing AND, OR, or NOT), the method recursively handles the junctions. Otherwise, it obtains and executes a handler for the `Criterion` class. The `handlers` map is a map of `Criterion` classes to query handlers. The implementation for `Equals` appears as follows:
+Note that if a `Junction` is encountered (representing AND, OR, or NOT), the method recursively handles the junctions. Otherwise, it obtains and executes a handler for the `Criterion` class. The `handlers` map is a map of `Criterion` class to query handlers. The implementation for `Equals` appears as follows:
 
 [source,groovy]
 ----
