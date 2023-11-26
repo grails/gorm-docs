@@ -1,4 +1,4 @@
-If you are using Grails then configuration can be provided via the `grails-app/conf/application.yml` file.
+If you are using Grails, configuration can be provided via the `grails-app/conf/application.yml` file.
 
 An example configuration can be seen below:
 
@@ -16,10 +16,10 @@ grails:
 ----
 
 
-You can specify any setting of the https://api.mongodb.com/java/current/com/mongodb/async/client/MongoClientSettings.html[MongoClientSettings] within the `options` block. The example above is configuring the https://api.mongodb.com/java/current/com/mongodb/connection/ClusterSettings.html#getMaxWaitQueueSize--[maxWaitQueueSize] property.
+You can specify any setting of the https://mongodb.github.io/mongo-java-driver/3.12/javadoc/com/mongodb/async/client/MongoClientSettings.html[MongoClientSettings] within the `options` block. The example above is configuring the https://mongodb.github.io/mongo-java-driver/3.12/javadoc/com/mongodb/connection/ClusterSettings.html#getMaxWaitQueueSize()[maxWaitQueueSize] property.
 
 
-An alternative to specifying the host and port is to use a MongoDB https://api.mongodb.com/java/current/com/mongodb/ConnectionString.html[ConnectionString]:
+An alternative to specifying the host and port is to use a MongoDB https://mongodb.github.io/mongo-java-driver/3.12/javadoc/com/mongodb/ConnectionString.html[ConnectionString]:
 
 [source,yaml]
 ----
@@ -28,7 +28,7 @@ grails:
         connectionString:  mongodb://user:pass@mycompany:27017
 ----
 
-If you are not using Grails you can either provide a `MongoClient` instance directly in the constructor or you can supply an instance of https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/core/env/PropertyResolver.html[PropertyResolver] with the necessary configuration.
+If you are not using Grails you can either provide a `MongoClient` instance directly in the constructor or you can supply an instance of https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/env/PropertyResolver.html[PropertyResolver] with the necessary configuration.
 
 For example:
 
@@ -39,11 +39,7 @@ import org.springframework.core.env.*
 def env = new StandardEnvironment()
 env.getPropertySources().addLast(new PropertiesPropertySource("myConfig", myConfig))
 
-new RxMongoDatastoreClient(
-            env,
-            "myDatabase",
-            MyClass
-)
+new RxMongoDatastoreClient(env, "myDatabase", MyClass)
 ----
 
 If you are using Spring Boot then the `Environment` instance can be obtained from the `ApplicationContext`:
@@ -51,8 +47,8 @@ If you are using Spring Boot then the `Environment` instance can be obtained fro
 [source,groovy]
 ----
 new RxMongoDatastoreClient(
-            applicationContext.getEnvironment(),
-            "myDatabase",
-            MyClass
+    applicationContext.getEnvironment(),
+    "myDatabase",
+    MyClass
 )
 ----

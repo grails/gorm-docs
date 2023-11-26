@@ -7,7 +7,6 @@ package example
 class Book implements RxMongoEntity<Book> {
     ObjectId id
     String title
-
     Author author
 }
 ----
@@ -18,16 +17,16 @@ This is traditionally how most blocking object mapping implementations have work
 
 [source,groovy]
 ----
-for(book in books) {
+for (book in books) {
     println "Author: ${book.author.name}"
 }
 ----
 
-In the above example RxGORM has no choice but to block in order to load the association lazy and access the `name`! Typically you do not want your reactive application to block at any point, so in order to get around this each proxy loaded by GORM implements the link:../api/grails/gorm/rx/proxy/ObservableProxy.html[ObservableProxy] interface. That means the above code can be written in a non-blocking manner:
+In the above example RxGORM has no choice but to block in order to load the association lazy and access the `name`! Typically, you do not want your reactive application to block at any point, so in order to get around this, each proxy loaded by GORM implements the link:../api/grails/gorm/rx/proxy/ObservableProxy.html[ObservableProxy] interface. That means the above code can be written in a non-blocking manner:
 
 [source,groovy]
 ----
-for(book in books) {
+for (book in books) {
     book.author.subscribe { Author author ->
         println "Author: ${author.name}"
     }
@@ -39,10 +38,9 @@ Another alternative if you know you plan to access the `author` association, is 
 [source,groovy]
 ----
 // using a dynamic finder
-Book.findByTitle("The Stand", [fetch:[author:"eager"]])
+Book.findByTitle("The Stand", [fetch: [author: "eager"]])
 
 // using a where query
-Book.where {
-    title == 'The Stand'
-}.join('author')
+Book.where { title == "The Stand" }
+    .join("author")
 ----

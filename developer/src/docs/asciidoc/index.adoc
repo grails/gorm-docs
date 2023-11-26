@@ -1,8 +1,12 @@
-= GORM Developer Guide
-Graeme Rocher
 :imagesdir: ./images
 :source-highlighter: coderay
+:toc: left
+:toc-title: GORM Developer Guide
+:numbered:
 :last-update-label!:
+
+= GORM Developer Guide
+Graeme Rocher
 
 [[introduction]]
 == Introduction
@@ -55,6 +59,6 @@ include::understandingApi/gormApis.adoc[]
 include::testing.adoc[]
 
 [[stepByStep]]
-== Step by Step Guide to Creating an Implementation
+== Step-by-Step Guide to Creating an Implementation
 
 include::stepByStep.adoc[]

@@ -23,10 +23,10 @@ In a real world application you would typically subscribe to the observable in o
 [source,groovy]
 ----
 new Book(title:"The Stand")
-        .save()
-        .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .save()
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----
 
 NOTE: If you don't call `subscribe(..)` or convert the `Observable` into a blocking operation, then no query will be executed! At least one call to `subscribe(..)` is required.
@@ -38,65 +38,64 @@ To retrieve an instance you can use the static `get(..)` method:
 [source,groovy]
 ----
 Book.get(id)
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----
 
 ==== Update - Updating instances
 
-To update an instance after retreiving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
+To update an instance after retrieving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap-rx.functions.Func1-[Observable.switchMap] method:
 
 [source,groovy]
 ----
 Book.get(id)
     .switchMap() { Book it ->
-    it.title = "The Shining"
-    it.save()
-}.subscribe { Book updated ->
-    println "Book updated!"
-}
+        it.title = "The Shining"
+        it.save()
+    }.subscribe { Book updated ->
+        println "Book updated!"
+    }
 ----
 
-The `switchMap` transforms an `Observable` and converters the result into another `Observable`. However, this is not the most efficient way to perform updates as you can use https://docs.grails.org/latest/guide/GORM.html#whereQueries[where queries] to update an instance without retrieving it:
+The `switchMap` transforms an `Observable` and converts the result into another `Observable`. However, this is not the most efficient way to perform updates as you can use https://gorm.grails.org/latest/hibernate/manual/index.html#whereQueries[where queries] to update an instance without retrieving it:
 
 
 [source,groovy]
 ----
-Book.where {
-    id == id
-}.updateAll(title:"The Shining")
- .subscribe { Number updateCount ->
-    println "${updateCount} books were updated!"
-}
+Book.where { id == id }
+    .updateAll(title: "The Shining")
+    .subscribe { Number updateCount ->
+        println "${updateCount} books were updated!"
+    }
 ----
 
 ==== Delete - Deleting instances
 
-To delete an instance after retreiving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap(rx.functions.Func1)[Observable.switchMap] method:
+To delete an instance after retreiving it you can use the https://reactivex.io/RxJava/javadoc/rx/Observable.html#switchMap-rx.functions.Func1-[Observable.switchMap] method:
 
 [source,groovy]
 ----
 Book.get(id)
-    .switchMap() { Book it ->
-    it.delete()
-}.subscribe { Boolean wasDeleted ->
-    if(wasDeleted) {
-        println "Book deleted!"
+    .switchMap() { Book book ->
+        book.delete()
     }
-}
+    .subscribe { Boolean wasDeleted ->
+        if(wasDeleted) {
+            println "Book deleted!"
+        }
+    }
 ----
 
 But, once again it is more efficient with where queries:
 
 [source,groovy]
 ----
-Book.where {
-    id == id
-}.deleteAll()
- .subscribe { Number deleteCount ->
-    println "${deleteCount} books were deleted!"
-}
+Book.where { id == id }
+    .deleteAll()
+    .subscribe { Number deleteCount ->
+        println "${deleteCount} books were deleted!"
+    }
 ----
 
 

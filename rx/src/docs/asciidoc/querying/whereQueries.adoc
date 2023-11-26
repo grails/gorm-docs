@@ -16,8 +16,9 @@ Like an `rx.Observable`, the `DetachedCriteria` class can be subscribed to:
 ----
 Book.where {
     title == 'The Stand'
-}.subscribe { Book it ->
-    println "Title = ${it.title}"
+}
+.subscribe { Book book ->
+    println "Title = ${book.title}"
 }
 ----
 
@@ -26,12 +27,13 @@ Alternatively you can execute one of the query methods to invoke the query and r
 
 [source,groovy]
 ----
-Book.where {
-    title == 'The Stand'
-}.list().subscribe { List<Book> books ->
-    for(book in books)
-        println "Title = ${book.title}"
-}
+Book.where { title == 'The Stand' }
+    .list()
+    .subscribe { List<Book> books ->
+        for (Book book in books) {
+            println "Title = ${book.title}"
+        }
+    }
 ----
 
-For more information on the syntax of where queries see the https://docs.grails.org/latest/guide/GORM.html#whereQueries[relevant section in the GORM documentation].
+For more information on the syntax of where queries see the https://gorm.grails.org/latest/hibernate/manual/index.html#whereQueries[relevant section in the GORM documentation].

@@ -1,9 +1,9 @@
-Although Where queries are preferred, Dynamic finders are another option for simple queries and are also very expressive. The https://docs.grails.org/latest/guide/GORM.html#finders[syntax for Dynamic finders is described in the GORM user guide], the major difference in RxGORM is that all dynamic finders return an `rx.Observable`:
+Although _Where queries_ are preferred, _Dynamic finders_ are another option for simple queries and are also very expressive. The https://gorm.grails.org/latest/hibernate/manual/index.html#finders[syntax for Dynamic finders is described in the GORM user guide]. The major difference in RxGORM is that all dynamic finders return an `rx.Observable`:
 
 [source,groovy]
 ----
 Book.findByAuthor("Stephen King")
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----

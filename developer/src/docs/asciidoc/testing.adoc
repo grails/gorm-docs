@@ -1,4 +1,4 @@
-The `grails-datastore-gorm-tck` project provides a few hundred tests that ensure a particular GORM implementation is compliant. To use the TCK you need to define a dependency on the TCK in the subprojects `build.gradle` file:
+The `grails-datastore-gorm-tck` project provides several hundred tests to guarantee that a particular GORM implementation is compliant. To use the TCK you need to define a dependency on the TCK in the subprojects `build.gradle` file:
 
 [source,groovy]
 ----
@@ -41,11 +41,11 @@ class Setup {
 }
 ----
 
-Some setup code has been omitted for clarity but basically the `Setup.groovy` class should initiase the `Datastore` and return a `Session` from the static `setup` method which gets passed a list of classes that need to be configured.
+Some setup code has been omitted for clarity, but essentially, the Setup.groovy class should initialize the Datastore and return a Session from the static setup method, which is passed a list of classes to be configured.
 
-With this done all of the TCK tests will run against the subproject. If a particular test cannot be implemented because the underlying datastore doesn't support the feature then you can create a test that matches the name of the test that is failing and it will override said test.
+With this setup, all the TCK tests will be executed against the subproject. If a specific test cannot be implemented due to the underlying datastore lacking support for a particular feature, you can create a test with the same name as the failing test, and it will override the corresponding test in the TCK.
 
-For example SimpleDB doesn't support pagination so there is a `grails.gorm.tests.PagedResultSpec` class that overrides the one from the TCK. Each test is a Spock specification and Spock has an `Ignore` annotation that can be used to ignore a particular test:
+For example: SimpleDB doesn't support pagination. Add a `grails.gorm.tests.PagedResultSpec` class that overrides the one from the TCK. Each test is a Spock specification and Spock has an `Ignore` annotation that can be used to ignore a particular test:
 
 [source,groovy]
 ----
