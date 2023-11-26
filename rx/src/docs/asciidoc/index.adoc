@@ -2,6 +2,8 @@
 :email: graeme.rocher@gmail.com
 :source-highlighter: coderay
 :numbered:
+:toc: left
+:toc-title: RxGORM Documentation
 
 = RxGORM - GORM for RxJava
 
