@@ -1,14 +1,13 @@
-To get started with your a new GORM implementation the following steps are required:
+To get started with a new GORM implementation, the following steps are required:
 
 
 === Initial Directory Creation
 
 
-[source,groovy]
 ----
-$ git clone git@github.com:grails/grails-data-mapping.git
-$ cd grails-data-mapping
-$ mkdir grails-datastore-gorm-xyz
+git clone https://github.com/grails/grails-data-mapping.git
+cd grails-data-mapping
+mkdir grails-datastore-gorm-xyz
 ----
 
 
@@ -17,9 +16,8 @@ $ mkdir grails-datastore-gorm-xyz
 
 Create build.gradle:
 
-[source,groovy]
 ----
-$ vi grails-datastore-gorm-xyz/build.gradle
+vi grails-datastore-gorm-xyz/build.gradle
 ----
 
 With contents:
@@ -27,11 +25,11 @@ With contents:
 [source,groovy]
 ----
 dependencies {
-    compile project(':grails-datastore-gorm'),
+    implementation project(':grails-datastore-gorm'),
             project(':grails-datastore-web'),
             project(':grails-datastore-gorm-support')
             
-    testCompile project(':grails-datastore-gorm-tck')
+    testImplementation project(':grails-datastore-gorm-tck')
     testRuntime "javax.servlet:javax.servlet-api:$servletApiVersion"
 
 }
@@ -39,9 +37,8 @@ dependencies {
 
 Add new project to settings.gradle in root project:
 
-[source,groovy]
 ----
-$ vi settings.gradle
+vi settings.gradle
 ----
 
 Changes shown below:
@@ -51,33 +48,30 @@ Changes shown below:
 // GORM Implementations
 'grails-datastore-gorm-neo4j',
 'grails-datastore-gorm-xyz',
-....
+...
 ----
 
 
 === Create Project Source Directories
 
 
-[source,groovy]
 ----
-$ mkdir grails-datastore-gorm-xyz/src/main/groovy
-$ mkdir grails-datastore-gorm-xyz/src/test/groovy
+mkdir grails-datastore-gorm-xyz/src/main/groovy
+mkdir grails-datastore-gorm-xyz/src/test/groovy
 ----
 
 
-=== Generate IDE Project Files and Import into IDE
+=== Generate IDE Project Files and Import into IDE (Optional)
 
 
-[source,groovy]
 ----
-$ gradlew grails-datastore-gorm-xyz:idea
+./gradlew grails-datastore-gorm-xyz:idea
 ----
 
 Or
 
-[source,groovy]
 ----
-$ gradlew grails-datastore-gorm-xyz:eclipse
+./gradlew grails-datastore-gorm-xyz:eclipse
 ----
 
 

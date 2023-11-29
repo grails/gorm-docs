@@ -1,4 +1,4 @@
-Associations and how they are handled are the biggest difference between RxGORM and the regular blocking version of GORM. As a user it is import that you familiarize yourself with how associations are handled in RxGORM in order to effectively build reactive, non-blocking applications. The following sections will describe how to adapt your code to take into account associations and your data model.
+Associations and how they are handled are the biggest difference between RxGORM and the regular blocking version of GORM. As a user it is important that you familiarize yourself with how associations are handled in RxGORM in order to effectively build reactive, non-blocking applications. The following sections will describe how to adapt your code to take into account associations and your data model.
 
 === Single Ended Associations
 

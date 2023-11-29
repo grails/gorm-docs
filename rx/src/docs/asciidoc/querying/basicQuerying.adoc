@@ -3,9 +3,9 @@ To query for a single instance by identifier you can use the `get(id)` method:
 [source,groovy]
 ----
 Book.get(id)
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----
 
 
@@ -15,19 +15,20 @@ To query for a `List` of objects you can use the `list()` method:
 ----
 Book.list()
     .subscribe { List<Book> books ->
-    for(book in books)
-        println "Title = ${book.title}"
-}
+        for(Book book in books) {
+            println "Title = ${book.title}"
+        }
+    }
 ----
 
-However, for large data sets it is better to use the `findAll()` method which will return each result in a reactive manner rather than load the entire list into memory:
+However, for large data sets, it is better to use the `findAll()` method which will return each result in a reactive manner rather than load the entire list into memory:
 
 [source,groovy]
 ----
 Book.findAll()
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----
 
 To return the first result you can use the `first()` method:
@@ -35,9 +36,9 @@ To return the first result you can use the `first()` method:
 [source,groovy]
 ----
 Book.first()
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----
 
 And conversely to return the last result you can use the `last()` method:
@@ -45,7 +46,7 @@ And conversely to return the last result you can use the `last()` method:
 [source,groovy]
 ----
 Book.last()
-    .subscribe { Book it ->
-    println "Title = ${it.title}"
-}
+    .subscribe { Book book ->
+        println "Title = ${book.title}"
+    }
 ----

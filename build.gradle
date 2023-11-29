@@ -114,6 +114,8 @@ allprojects { project ->
                 'version': project.version,
                 'imagesdir': 'images',
                 'sourcedir': "${project.projectDir}/src/main/groovy"
+
+        baseDirFollowsSourceFile()
     }
 
     task copyDocs(type: Copy, dependsOn: asciidoctor) {

@@ -1,5 +1,5 @@
 
-=== The MappingContext
+==== The MappingContext
 
 
 The `org.grails.datastore.mapping.model.MappingContext` interface is used to obtain metadata about the classes that are configured for persistence. There are `org.grails.datastore.mapping.model.PersistentEntity` and `org.grails.datastore.mapping.model.PersistentProperty` interfaces that represent a class and its properties respectively. These can be obtained and introspected via the `MappingContext`.
@@ -49,12 +49,12 @@ class Neo4jMappingContext extends AbstractMappingContext {
 Notice how Neo4j provides a custom `GraphGormMappingFactory` and `GraphPersistentEntity` to allow the domain class configuration to be changed for a given Neo4j `Node`.
 
 
-=== The Datastore Interface
+==== The Datastore Interface
 
 
 The `org.grails.datastore.mapping.core.Datastore` interface is the equivalent of a SQL `DataSource` where by it provides the necessary capability to create a connection. In most cases one can simply subclass the `AbstractDatastore` super class and implement the `createSession` method. The following implementation is from the `SimpleMapDatastore` which implements GORM ontop of a `ConcurrentHashMap`:
 
-[source,groovy]
+[,java]
 ----
 @Override
 protected Session createSession(PropertyResolver connDetails) {
@@ -64,7 +64,7 @@ protected Session createSession(PropertyResolver connDetails) {
 
 The implementation depends a lot on the underlying datastore. For example for MongoDB the following implementation is used:
 
-[source,groovy]
+[,java]
 ----
 @Override
 protected Session createSession(PropertyResolver connDetails) {
@@ -76,16 +76,16 @@ Notice that the `Datastore` also has a reference to the `MappingContext` discuss
 
 
 
-=== The Session Interface
+==== The Session Interface
 
 
 The `org.grails.datastore.mapping.core.Session` interface represents an active connection. It can be either stateful or stateless, depending on the implementation. For example of embedded databases where there is no network connection, a stateful session is not particularly useful, but a datastore that creates network connections you may want to cache returned instances to reduce load.
 
 The `AbstractSession` class provides some support for creating stateful sessions, if you prefer a stateless implementation then simply implement `Session` or subclass `AbstractAttributeStoringSession`.
 
-In general if you subclass `AbstractSession` the minimum you need to do is implement the `createPersister` method:
+In general, if you subclass `AbstractSession`, the minimum you need to do is implement the `createPersister` method:
 
-[source,groovy]
+[,java]
 ----
 protected Persister createPersister(Class cls, MappingContext mappingContext) {
     PersistentEntity entity = mappingContext.getPersistentEntity(cls.getName());
@@ -97,4 +97,4 @@ protected Persister createPersister(Class cls, MappingContext mappingContext) {
 }
 ----
 
-The example above is from the `SimpleMapSession` implementation, which creates a `SimpleMapEntityPersister` instance and returns it. Returning null indicates that the class cannot be persisted and an exception will be thrown
+The example above is from the `SimpleMapSession` implementation, which creates a `SimpleMapEntityPersister` instance and returns it. Returning null indicates that the class cannot be persisted and an exception will be thrown.

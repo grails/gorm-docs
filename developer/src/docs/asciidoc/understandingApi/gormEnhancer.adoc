@@ -31,7 +31,7 @@ enhancer.enhance()
 def books = Book.list()
 ----
 
-They key part to enabling the usage of all the GORM methods (`list()`, dynamic finders etc.) is the usage of the `MongoGormEnhancer`. This class subclasses `org.grails.datastore.gorm.GormEnhancer` and provides some extensions to GORM specific to MongoDB. A subclass is not required however and if you don't require any datastore specific extensions you can just as easily use the regular `GormEnhancer`:
+The key element for enabling the use of all GORM methods (`list()`, dynamic finders, etc.) is the utilization of the `MongoGormEnhancer`. This class is a subclass of `org.grails.datastore.gorm.GormEnhancer` and offers extensions to GORM specifically tailored for MongoDB. However, a subclass is not mandatory, and if you don't need any datastore-specific extensions, you can equally use the standard `GormEnhancer`:
 
 [source,groovy]
 ----

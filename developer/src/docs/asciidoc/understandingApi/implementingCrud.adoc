@@ -6,11 +6,11 @@ The `EntityPersister` interface is used to implement the basic Create, Read, Upd
 
 In many cases there is a representation of an entity in its "native" form as supplied by the datastore driver. For example in Cassandra this could be a `ColumnFamily`, or in MongoDB a `DBCollection`. 
 
-To support implementation such cases there is an abstract `NativeEntryEntityPersister<T, K>` super class that provides the basis for an implementation that maps a native entry, such as a MongoDB `DBObject` or a Neo4j `Node` to a persist entity and back again.
+To support implementing such cases, there is an abstract `NativeEntryEntityPersister<T, K>` super class that provides the basis for an implementation that maps a native entry, such as a MongoDB `DBObject` or a Neo4j `Node`, to a persisted entity and back again.
 
-The 2 generic types of this superclass indicate the native entry type (example `DBObject` in MongoDB) and the native key type (example `ObjectId` in MongoDB). The MongoDB implementation looks like this:
+The two generic types of this superclass indicate the native entry type (example `DBObject` in MongoDB) and the native key type (example `ObjectId` in MongoDB). The MongoDB implementation looks like this:
 
-[source,groovy]
+[,java]
 ----
 public class MongoEntityPersister extends NativeEntryEntityPersister<DBObject, Object>
 ----
@@ -19,17 +19,17 @@ Note that `Object` is used for the key since MongoDB also supports Long and Stri
 
 They key methods that need implementing are defined below:
 
-* `getEntityFamily()` - Defines the the name of the entity group or family. This could be a database table, a Cassandra Column Family or a MongoDB collection.
+* `getEntityFamily()` - Defines the name of the entity group or family. This could be a database table, a Cassandra Column Family or a MongoDB collection
 * `T createNewEntry(String family)` - Creates a native entry ready to be inserted
-* `Object getEntryValue(T nativeEntry, String property)` - Retrieves a value of entry and returns its Java object form. For example a "date" property stored as a String in the datastore would need to b returned as a java.util.Date at this point
+* `Object getEntryValue(T nativeEntry, String property)` - Retrieves a value of entry and returns its Java object form. For example a "date" property stored as a String in the datastore would need to be returned as a java.util.Date at this point
 * `setEntryValue(T nativeEntry, String key, Object value)` - Sets a value of the native entry, converting any Java objects to the required native format
 * `deleteEntry(String family, K key, Object entry)` - Deletes an entry for the given family, native key and entry
 * `T retrieveEntry(PersistentEntity persistentEntity, String family, Serializable key)` - Retrieves a native entry for the given entity, family and key
 * `K storeEntry(PersistentEntity persistentEntity, EntityAccess entityAccess, K storeId, T nativeEntry)` - Stores a native entry for the given id 
 * `updateEntry(PersistentEntity persistentEntity, EntityAccess entityAccess, K key, T entry)` - Updates an entry 
 * `K generateIdentifier(PersistentEntity persistentEntity, T entry)` - Generate an identifier for the given native entry
-* `PropertyValueIndexer getPropertyIndexer(PersistentProperty property)` - If the datastore requires manual indexing you'll need to implement a `PropertyIndexer` otherwise return null
-* `AssociationIndexer getAssociationIndexer(T nativeEntry, Association association)` - If the datastore requires manual indexing you'll need to implement a `AssociationIndexer` otherwise return null
+* `PropertyValueIndexer getPropertyIndexer(PersistentProperty property)` - If the datastore requires manual indexing, you'll need to implement a `PropertyIndexer`, otherwise return null
+* `AssociationIndexer getAssociationIndexer(T nativeEntry, Association association)` - If the datastore requires manual indexing, you'll need to implement a `AssociationIndexer`, otherwise return null
 
 
 
@@ -40,7 +40,7 @@ They key methods that need implementing are defined below:
 
 The `createNewEntry` method is used to create a native record that will be inserted into the datastore. In MongoDB this is a `DBObject` whilst in the implementation for `ConcurrentHashMap` it is another `Map`:
 
-[source,groovy]
+[,java]
 ----
 @Override
 protected DBObject createNewEntry(String family) {
@@ -54,7 +54,7 @@ protected DBObject createNewEntry(String family) {
 
 The `retrieveEntry` method is used to retrieve a native record for a given key:
 
-[source,groovy]
+[,java]
 ----
 protected DBObject retrieveEntry(final PersistentEntity persistentEntity,
         String family, final Serializable key) {
@@ -69,7 +69,7 @@ protected DBObject retrieveEntry(final PersistentEntity persistentEntity,
 
 Here you can see the `MongoDB` implementation that uses a Spring Data `MongoTemplate` to find a `DBObject` for the given key. There is a separate `storeEntry` method that is used to actually store the native object. In `MongoDB` this looks like:
 
-[source,groovy]
+[,java]
 ----
 @Override
 protected Object storeEntry(final PersistentEntity persistentEntity, final EntityAccess entityAccess,
@@ -83,14 +83,14 @@ protected Object storeEntry(final PersistentEntity persistentEntity, final Entit
 }
 ----
 
-Notice it doesn't actually do anything native insert into a MongoDB collection. This is because the Datastore API supports the notion of batch insert operations and flushing. In the case of `MongoDB` the `MongoSession` implementation overrides the `flushPendingInserts` method of `AbstractSession` and performs a batch insert of multiple MongoDB documents (ie `DBObject`s) at once:
+Notice it doesn't actually do anything native insert into a MongoDB collection. This is because the Datastore API supports the notion of batch insert operations and flushing. In the case of `MongoDB` the `MongoSession` implementation overrides the `flushPendingInserts` method of `AbstractSession` and performs a batch insert of multiple MongoDB documents (ie ``DBObject``s) at once:
 
-[source,groovy]
+[,java]
 ----
-collection.insert(dbObjects.toArray(new DBObject[dbObjects.size()]), writeConcernToUse);
+collection.insert(dbObjects.toArray(DBObject::new), writeConcernToUse);
 ----
 
-Other datastores that  do not support batch inserts would instead to the insert in the `storeEntry` method itself. For example the implementation for `ConcurrentHashMap` looks like (note Groovy code):
+Other datastores that  do not support batch inserts would instead do the insert in the `storeEntry` method itself. For example the implementation for `ConcurrentHashMap` looks like __(with Groovy)__:
 
 [source,groovy]
 ----
@@ -98,7 +98,7 @@ protected storeEntry(PersistentEntity persistentEntity, EntityAccess entityAcces
     if (!persistentEntity.root) {
         nativeEntry.discriminator = persistentEntity.discriminator
     }
-    datastore<<family>>.put(storeId, nativeEntry)
+    datastore.put(storeId, nativeEntry)
     return storeId
 }
 ----
@@ -109,7 +109,7 @@ protected storeEntry(PersistentEntity persistentEntity, EntityAccess entityAcces
 
 The `updateEntry` method is used to update an entry:
 
-[source,groovy]
+[,java]
 ----
 public void updateEntry(final PersistentEntity persistentEntity, final EntityAccess ea,
         final Object key, final DBObject entry) {
@@ -131,7 +131,7 @@ public void updateEntry(final PersistentEntity persistentEntity, final EntityAcc
 }
 ----
 
-As you can see again the underlying database specific `update` method is used, in this case the `DBCollection`'s `update` method.
+As you can see again the underlying database specific `update` method is used, in this case the ``DBCollection``'s `update` method.
 
 
 ==== Delete
@@ -142,13 +142,13 @@ The `deleteEntry` method is used to delete an entry. For example in the `Concurr
 [source,groovy]
 ----
 protected void deleteEntry(String family, key, entry) {
-    datastore<<family>>.remove(key)
+    datastore.remove(key)
 }
 ----
 
 Whilst in `MongoDB` the `DBCollection` object's `remove` method is called:
 
-[source,groovy]
+[,java]
 ----
 @Override
 protected void deleteEntry(String family, final Object key, final Object entry) {
@@ -170,7 +170,7 @@ protected void deleteEntry(String family, final Object key, final Object entry) 
 
 Note that if the underlying datastore supports batch delete operations you may want override and implement the `deleteEntries` method which allows for deleting multiple entries in a single operation. The implementation for MongoDB looks like:
 
-[source,groovy]
+[,java]
 ----
 protected void deleteEntries(String family, final List<Object> keys) {
     mongoTemplate.execute(new DbCallback<Object>() {
@@ -190,4 +190,4 @@ protected void deleteEntries(String family, final List<Object> keys) {
 }
 ----
 
-You'll notice this implementation uses a `MongoQuery` instance. Note that implementing an `EntityPersister` you have enabled basic CRUD operations, but not querying, which is a topic of the following sections. First, however secondary indices need to covered since they are required for querying.
+You'll notice that this implementation uses a `MongoQuery` instance. Also, it's important to note that when implementing an `EntityPersister`, you enable basic CRUD operations, but not querying. The latter is a subject we'll explore in the following sections. However, before delving into that, we need to cover secondary indices, as they are required for querying.
