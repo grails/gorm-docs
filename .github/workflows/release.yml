@@ -28,7 +28,7 @@ jobs:
         id: extract_branch
         run: echo "value=${GITHUB_REF:11}" >> $GITHUB_OUTPUT
       - name: Run pre-release
-        uses: grails/github-actions/pre-release@v1
+        uses: grails/github-actions/pre-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
