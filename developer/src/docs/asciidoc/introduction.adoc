@@ -1,8 +1,8 @@
-This documentation describes the GORM API mechanics and how a datastore implementation can be built to interface to any database providing a GORM API onto it. This documentation is mainly targeted at developers interested in creating implementations of GORM ontop of alternative datastores.
+This documentation describes the GORM API mechanics and how a datastore implementation can be built to interface to any database providing a GORM API onto it. This documentation is mainly targeted at developers interested in creating implementations of GORM on top of alternative datastores.
 
 As of this writing the project has several implementations of GORM against a variety of different datastore implementations. Current implementations include:
 
-* Hibernate 3,4 and 5
+* Hibernate 3, 4 and 5
 * MongoDB
 * Redis
 * Neo4j

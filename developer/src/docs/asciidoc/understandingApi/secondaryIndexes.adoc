@@ -1,6 +1,6 @@
-Many datastores do not support secondary indexing or require you to build your own. In cases like this you will need to implement a `PropertyIndexer`.
+Many datastores do not support secondary indexing or require you to build your own. In cases like this, you will need to implement a `PropertyIndexer`.
 
-NOTE: If the underlying datastore supports secondary indexes then it is ok to just return a `null` PropertyIndexer and let the datastore handle the indexing
+NOTE: If the underlying datastore supports secondary indexes then it is ok to just return a `null` `PropertyIndexer` and let the datastore handle the indexing.
 
 For example the `ConcurrentHashMap` implementation creates secondary indices by populating another `Map` containing the indices:
 
@@ -9,10 +9,10 @@ For example the `ConcurrentHashMap` implementation creates secondary indices by 
 void index(value, primaryKey) {
 
     def index = getIndexName(value)
-    def indexed = indices<<index>>
+    def indexed = indices[index]
     if (indexed == null) {
         indexed = []
-        indices<<index>> = indexed
+        indices[index] = indexed
     }
     if (!indexed.contains(primaryKey)) {
         indexed << primaryKey
@@ -22,7 +22,7 @@ void index(value, primaryKey) {
 
 The implementation for Redis is very similar and stores the primary key in a Redis set:
 
-[source,groovy]
+[,java]
 ----
 public void index(final Object value, final Long primaryKey) {
       if (value == null) {
@@ -40,7 +40,7 @@ An index name is typically built from the entity name, property name and propert
 List query(value, int offset, int max) {
     def index = getIndexName(value)
 
-    def indexed = indices<<index>>
+    def indexed = indices[index]
     if (!indexed) {
         return Collections.emptyList()
     }
@@ -56,7 +56,7 @@ Finally, when an object is deleted it will need to removed from the indices. Thi
 ----
 void deindex(value, primaryKey) {
     def index = getIndexName(value)
-    def indexed = indices<<index>>
+    def indexed = indices[index]
     if (indexed) {
         indexed.remove(primaryKey)
     }
