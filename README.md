@@ -1,3 +1,1 @@
-# GORM Documentation
-
-This the documentation that builds the [GORM Website](https://gorm.grails.org).
+The grails-data-mapping documentation has been relocated to [grails-data-mapping](https://github.com/grails/grails-data-mapping) project as of Grails 7.
